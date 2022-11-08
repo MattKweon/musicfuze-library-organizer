@@ -8,9 +8,8 @@ create schema "public";
 
 CREATE TABLE "public"."accounts" (
 	"accountId" serial NOT NULL,
-	"username" TEXT NOT NULL,
+	"username" TEXT NOT NULL UNIQUE,
 	"hashedPassword" TEXT NOT NULL,
-	"savedSongs" int NOT NULL,
 	CONSTRAINT "accounts_pk" PRIMARY KEY ("accountId")
 ) WITH (
   OIDS=FALSE
