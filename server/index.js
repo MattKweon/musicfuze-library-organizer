@@ -22,7 +22,7 @@ app.use(express.static(publicPath));
 
 app.use(staticMiddleware);
 
-app.get('/api/auth/sign-up', (req, res, next) => {
+app.post('/api/auth/sign-up', (req, res, next) => {
   const { username, password } = req.body;
   if (!username || !password) {
     throw new ClientError(400, 'username and password are required fields');

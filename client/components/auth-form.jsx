@@ -11,6 +11,7 @@ export default class AuthForm extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e) {
@@ -18,9 +19,24 @@ export default class AuthForm extends React.Component {
     this.setState({ [name]: value });
   }
 
+  handleSubmit(e) {
+    e.preventDefault();
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    };
+    fetch('/api/auth/sign-up', req)
+      .then(res => res.json())
+      .then(result => {
+      });
+  }
+
   render() {
     return (
-      <Form>
+      <Form onSubmit={this.handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
           <Form.Control
