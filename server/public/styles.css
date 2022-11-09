@@ -1,12 +1,21 @@
-.color-nav {
-  background-color: #e2d9f3;
+.bg-light {
+  background-color: #f8f9fa;
 }
 
-.margin-logo {
-  margin-left: -1rem;
+.color-nav {
+  background-color: #e2d9f3;
+  padding: 0;
 }
 
 .color-btn {
   border: #6610f2;
   background-color: #6610f2;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.form-container {
+  border: solid #ced4da;
 }

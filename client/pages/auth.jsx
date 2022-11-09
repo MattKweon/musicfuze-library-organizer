@@ -1,10 +1,24 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import AuthForm from '../components/auth-form';
 
 export default class Auth extends React.Component {
   render() {
     return (
       <div>
-        <h1>Auth Page</h1>
+        <Container>
+          <Row>
+            <Col className="text-center">
+              <h1>MusicFuze</h1>
+              <p>Create an accountn to get started!</p>
+            </Col>
+          </Row>
+          <Row>
+            <AuthForm />
+          </Row>
+        </Container>
       </div>
     );
   }
