@@ -1,22 +1,10 @@
-.bg-light {
-  background-color: #f8f9fa;
-}
-
 .color-nav {
   background-color: #e2d9f3;
   padding: 0;
 }
 
-.color-btn {
+.btn-main {
   border: #6610f2;
   background-color: #6610f2;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.form-container {
-  border: solid #ced4da;
-  background-color: #fff;
+  color: #ffff;
 }

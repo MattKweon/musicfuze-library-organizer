@@ -6,21 +6,23 @@ export default class AuthForm extends React.Component {
   render() {
     return (
       <Form className="form-container">
-        <Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
             className="bg-light"
           />
         </Form.Group>
-        <Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
           <Form.Control
           type="password"
           className="bg-light"
           />
         </Form.Group>
-        <Button type="submit" className="color-btn">Register</Button>
+        <div className="d-flex flex-row-reverse">
+          <Button type="submit" className="btn-main">Register</Button>
+        </div>
       </Form>
     );
   }

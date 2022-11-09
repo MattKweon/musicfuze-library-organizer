@@ -1,12 +1,15 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
+
+const styles = {
+  page: { minHeight: 'calc(100vh - 3.5rem)' }
+};
 
 export default function PageContainer({ children }) {
   return (
     <div className="bg-light">
-      <Container>
+      <div className="container" style={styles.page}>
         {children}
-      </Container>
+      </div>
     </div>
   );
 }
