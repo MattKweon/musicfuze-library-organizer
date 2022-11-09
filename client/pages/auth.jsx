@@ -10,9 +10,9 @@ export default class Auth extends React.Component {
       <div>
         <Container>
           <Row>
-            <Col className="text-center">
+            <Col className="text-center mt-5" >
               <h1>MusicFuze</h1>
-              <p>Create an accountn to get started!</p>
+              <p>Create an account to get started!</p>
             </Col>
           </Row>
           <Row>
