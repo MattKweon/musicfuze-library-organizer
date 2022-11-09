@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 export default class AuthForm extends React.Component {
   render() {
     return (
-      <Form className="form-container">
+      <Form>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
           <Form.Control
