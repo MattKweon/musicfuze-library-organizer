@@ -9,6 +9,13 @@ export default class AuthForm extends React.Component {
       username: '',
       password: ''
     };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   }
 
   render() {
@@ -18,6 +25,8 @@ export default class AuthForm extends React.Component {
           <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
+            name="username"
+            onChange={this.handleChange}
             className="bg-light"
           />
         </Form.Group>
@@ -25,6 +34,8 @@ export default class AuthForm extends React.Component {
           <Form.Label>Password</Form.Label>
           <Form.Control
           type="password"
+          name="password"
+          onChange={this.handleChange}
           className="bg-light"
           />
         </Form.Group>
