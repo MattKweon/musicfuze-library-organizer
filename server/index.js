@@ -1,4 +1,5 @@
 require('dotenv/config');
+const path = require('path');
 const pg = require('pg');
 const argon2 = require('argon2');
 const express = require('express');
@@ -14,9 +15,12 @@ const db = new pg.Pool({
 });
 
 const app = express();
+const publicPath = path.join(__dirname, 'public');
+
+app.use(express.json());
+app.use(express.static(publicPath));
 
 app.use(staticMiddleware);
-app.use(express.json());
 
 app.get('/api/auth/sign-up', (req, res, next) => {
   const { username, password } = req.body;

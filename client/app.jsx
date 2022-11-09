@@ -1,8 +1,14 @@
 import React from 'react';
-import Home from './pages/home';
+import NavigationBar from './components/navigation-bar';
+import Auth from './pages/auth';
 
 export default class App extends React.Component {
   render() {
-    return <Home />;
+    return (
+      <>
+        <NavigationBar />
+        <Auth />
+      </>
+    );
   }
 }
