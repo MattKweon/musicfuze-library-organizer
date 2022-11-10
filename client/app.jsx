@@ -45,7 +45,7 @@ export default class App extends React.Component {
         <>
           <Navbar />
           <PageContainer>
-            <Auth />
+            { this.renderPage() }
           </PageContainer>
         </>
       </AppContext.Provider>
