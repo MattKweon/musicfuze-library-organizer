@@ -34,6 +34,8 @@ export default class AuthForm extends React.Component {
       .then(result => {
         if (action === 'sign-up') {
           window.location.hash = 'sign-in';
+        } else if (result.error) {
+          this.setState({ error: result.error });
         } else if (result.user && result.token) {
           this.props.onSignIn(result);
         }
@@ -46,6 +48,7 @@ export default class AuthForm extends React.Component {
     const submitBtnText = action === 'sign-up'
       ? 'Register'
       : 'Log In';
+    const errorMsg = 'Incorrect username or password';
     return (
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
@@ -70,6 +73,9 @@ export default class AuthForm extends React.Component {
           autoFocus
           />
         </Form.Group>
+        {this.state.error &&
+          <div className="alert alert-danger py-1">{errorMsg}</div>
+        }
         <div className="d-flex flex-row-reverse">
           <Button type="submit" className="btn-main">{submitBtnText}</Button>
         </div>
