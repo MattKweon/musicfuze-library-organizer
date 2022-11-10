@@ -9,7 +9,13 @@
   color: #ffff;
 }
 
-.btn-main:hover {
+.btn-alt {
+  border: solid #6610f2;
+  color: #6610f2;
+}
+
+.btn-main:hover,
+.btn-alt:hover {
   background-color: #a370f7;
   color: #ffff;
 }
