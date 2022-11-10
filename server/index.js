@@ -51,6 +51,14 @@ app.post('/api/auth/sign-up', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// app.post('/api/auth/sign-in', (req, res, next) => {
+//   const { username, password } = req.bodu;
+//   if (!username || !password) {
+//     throw new ClientError(400, 'username and password are required fields');
+//   }
+//   argon2;
+// });
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
