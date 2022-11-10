@@ -35,6 +35,10 @@ export default class AuthForm extends React.Component {
   }
 
   render() {
+    const { action } = this.props;
+    const submitBtnText = action === 'sign-up'
+      ? 'Register'
+      : 'Log In';
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Group className="mb-3">
@@ -56,7 +60,7 @@ export default class AuthForm extends React.Component {
           />
         </Form.Group>
         <div className="d-flex flex-row-reverse">
-          <Button type="submit" className="btn-main">Register</Button>
+          <Button type="submit" className="btn-main">{submitBtnText}</Button>
         </div>
       </Form>
     );
