@@ -1,7 +1,7 @@
 import React from 'react';
 import AppContext from './lib/app-context';
 import parseRoute from './lib/parse-route';
-import AuthPage from './pages/auth-page';
+import Auth from './pages/auth-page';
 import Navbar from './components/navbar';
 import PageContainer from './components/page-container';
 
@@ -34,7 +34,7 @@ export default class App extends React.Component {
         <>
           <Navbar />
           <PageContainer>
-            <AuthPage />
+            <Auth />
           </PageContainer>
         </>
       </AppContext.Provider>
