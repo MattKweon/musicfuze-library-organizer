@@ -14,6 +14,7 @@ export default class Navbar extends React.Component {
             />
           </a>
           <div>
+            <a href="#sign-in" className="btn btn-alt me-2">Sign In</a>
             <a href="#sign-up" className="btn btn-main">Sign Up</a>
           </div>
         </div>
