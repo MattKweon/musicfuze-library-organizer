@@ -19,20 +19,16 @@ export default class App extends React.Component {
     window.addEventListener('hashchange', () => {
       const newRoute = parseRoute(window.location.hash);
       this.setState({ route: newRoute });
-      // console.log('second render');
     });
     this.setState({ isAuthorizing: false });
-    // console.log('first render');
   }
 
   render() {
     if (this.state.isAuthorizing) {
-      // console.log('component mounted');
       return null;
     }
     const { user, route } = this.state;
     const contextValue = { user, route };
-    // console.log(contextValue);
     return (
       <AppContext.Provider value={contextValue}>
         <>
