@@ -15,6 +15,8 @@ export default class App extends React.Component {
       isAuthorizing: true,
       route: parseRoute(window.location.hash)
     };
+
+    this.handleSignIn = this.handleSignIn.bind(this);
   }
 
   componentDidMount() {
