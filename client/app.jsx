@@ -20,6 +20,7 @@ export default class App extends React.Component {
       const newRoute = parseRoute(window.location.hash);
       this.setState({ route: newRoute });
     });
+    this.setState({ isAuthorizing: false });
   }
 
   render() {
