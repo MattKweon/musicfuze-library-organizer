@@ -44,9 +44,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (this.state.isAuthorizing) {
-      return null;
-    }
+    if (this.state.isAuthorizing) return null;
     const { user, route } = this.state;
     const { handleSignIn } = this;
     const contextValue = { user, route, handleSignIn };

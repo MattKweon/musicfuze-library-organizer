@@ -1,10 +1,14 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
+import Redirect from '../components/redirect';
 import AuthForm from '../components/auth-form';
 
 export default class Auth extends React.Component {
   render() {
-    const { route } = this.context;
+    const { user, route, handleSignIn } = this.context;
+
+    if (user) return <Redirect to="" />;
+
     const welcomeMessage = route.path === 'sign-in'
       ? 'Please sign-in to continue'
       : 'Create an account to get started!';
@@ -18,6 +22,7 @@ export default class Auth extends React.Component {
           <div className="card p-3">
             <AuthForm
               action={route.path}
+              onSignIn={handleSignIn}
             />
           </div>
         </div>

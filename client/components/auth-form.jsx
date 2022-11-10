@@ -21,6 +21,7 @@ export default class AuthForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    const { action } = this.props;
     const req = {
       method: 'POST',
       headers: {
@@ -28,9 +29,14 @@ export default class AuthForm extends React.Component {
       },
       body: JSON.stringify(this.state)
     };
-    fetch('/api/auth/sign-up', req)
+    fetch(`/api/auth/${action}`, req)
       .then(res => res.json())
       .then(result => {
+        if (action === 'sign-up') {
+          window.location.hash = 'sign-in';
+        } else if (result.user && result.token) {
+          this.props.onSignIn(result);
+        }
       });
   }
 
@@ -49,6 +55,8 @@ export default class AuthForm extends React.Component {
             name="username"
             onChange={handleChange}
             className="bg-light"
+            required
+            autoFocus
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -58,6 +66,8 @@ export default class AuthForm extends React.Component {
           name="password"
           onChange={handleChange}
           className="bg-light"
+          required
+          autoFocus
           />
         </Form.Group>
         <div className="d-flex flex-row-reverse">
