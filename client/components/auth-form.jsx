@@ -36,17 +36,18 @@ export default class AuthForm extends React.Component {
 
   render() {
     const { action } = this.props;
+    const { handleChange, handleSubmit } = this;
     const submitBtnText = action === 'sign-up'
       ? 'Register'
       : 'Log In';
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
             name="username"
-            onChange={this.handleChange}
+            onChange={handleChange}
             className="bg-light"
           />
         </Form.Group>
@@ -55,7 +56,7 @@ export default class AuthForm extends React.Component {
           <Form.Control
           type="password"
           name="password"
-          onChange={this.handleChange}
+          onChange={handleChange}
           className="bg-light"
           />
         </Form.Group>
