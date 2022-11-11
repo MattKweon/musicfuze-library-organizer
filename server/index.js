@@ -95,10 +95,27 @@ app.get('/api/search', (req, res, next) => {
 app.get('/api/search/:endpoint', (req, res, next) => {
   const { endpoint } = req.params;
   const { q } = req.query;
+  // const options = {
+  //   method: 'GET',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   }
+  // };
   fetch(`https://api.deezer.com/search/${endpoint}?q=${q}`)
     .then(res => res.json())
     .then(result => {
-      res.status(201).json(result);
+      const data = result.data;
+      if (endpoint === 'artist') {
+        const artistList = data.map(({ name, picture }) => ({ name, picture }));
+        res.status(201).json(artistList);
+      } else if (endpoint === 'album') {
+        const albumList = data.map(({ title, cover, artist: { name } }) => ({ title, cover, name }));
+        res.status(201).json(albumList);
+      } else if (endpoint === 'track') {
+        // eslint-disable-next-line camelcase
+        const trackList = data.map(({ title, explicit_lyrics, artist: { name }, album: { cover } }) => ({ title, explicit_lyrics, name, cover }));
+        res.status(201).json(trackList);
+      }
     });
 });
 
