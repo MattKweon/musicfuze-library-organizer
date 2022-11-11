@@ -21,8 +21,8 @@ export default class Navbar extends React.Component {
           <div>
             { user !== null &&
               <>
-                <a href="#home" className="me-4">Home</a>
-                <a href="discover" className="text-decoration-none">Discover</a>
+                <a href="#" className="me-4">Home</a>
+                <a href="#discover" className="text-decoration-none">Discover</a>
               </>
             }
             { user === null &&

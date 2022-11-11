@@ -4,6 +4,7 @@ import AppContext from './lib/app-context';
 import parseRoute from './lib/parse-route';
 import Auth from './pages/auth-page';
 import Home from './pages/home-page';
+import Discover from './pages/discover-page';
 import Navbar from './components/navbar';
 import PageContainer from './components/page-container';
 
@@ -39,6 +40,9 @@ export default class App extends React.Component {
     const { path } = this.state.route;
     if (path === '') {
       return <Home />;
+    }
+    if (path === 'discover') {
+      return <Discover />;
     }
     if (path === 'sign-in' || path === 'sign-up') {
       return <Auth />;
