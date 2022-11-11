@@ -7,7 +7,19 @@ export default class Discover extends React.Component {
     if (!this.context.user) return <Redirect to="sign-in" />;
 
     return (
-      <h1>discover-page</h1>
+      <div className="container">
+        <div className="row">
+          <div className="col-10">
+            <input
+              type="text"
+              name="search"
+            />
+          </div>
+          <div className="col-2">
+            <div type="submit" className="btn">search</div>
+          </div>
+        </div>
+      </div>
     );
   }
 }
