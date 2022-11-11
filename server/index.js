@@ -83,15 +83,6 @@ app.post('/api/auth/sign-in', (req, res, next) => {
     });
 });
 
-app.get('/api/search', (req, res, next) => {
-  const { q } = req.query;
-  fetch(`https://api.deezer.com/search?q=${q}`)
-    .then(res => res.json())
-    .then(result => {
-      res.status(201).json(result);
-    });
-});
-
 app.get('/api/search/:endpoint', (req, res, next) => {
   const { endpoint } = req.params;
   const { q } = req.query;

@@ -1,10 +1,15 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 export default class Navbar extends React.Component {
   render() {
+    const { user } = this.context;
+    const containerJustifyContent = user
+      ? 'container justify-content-start'
+      : 'container';
     return (
       <nav className="navbar color-nav">
-        <div className="container">
+        <div className={containerJustifyContent}>
           <a href="#" className="navbar-brand">
             <img
               src="/images/logo.png"
@@ -14,11 +19,23 @@ export default class Navbar extends React.Component {
             />
           </a>
           <div>
-            <a href="#sign-in" className="btn btn-alt me-2">Sign In</a>
-            <a href="#sign-up" className="btn btn-main">Sign Up</a>
+            { user !== null &&
+              <>
+                <a href="#home" className="me-4">Home</a>
+                <a href="discover" className="text-decoration-none">Discover</a>
+              </>
+            }
+            { user === null &&
+              <>
+                <a href="#sign-in" className="btn btn-alt me-2">Sign In</a>
+                <a href="#sign-up" className="btn btn-main">Sign Up</a>
+              </>
+            }
           </div>
         </div>
       </nav>
     );
   }
 }
+
+Navbar.contextType = AppContext;
