@@ -86,12 +86,6 @@ app.post('/api/auth/sign-in', (req, res, next) => {
 app.get('/api/search/:endpoint', (req, res, next) => {
   const { endpoint } = req.params;
   const { q } = req.query;
-  // const options = {
-  //   method: 'GET',
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   }
-  // };
   fetch(`https://api.deezer.com/search/${endpoint}?q=${q}`)
     .then(res => res.json())
     .then(result => {

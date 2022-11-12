@@ -16,16 +16,20 @@ export default class Discover extends React.Component {
     this.handleFilterClick = this.handleFilterClick.bind(this);
   }
 
-  // componentDidMount() {
-  //   const { params } = this.context.route;
-  //   const endpoint = params.get('filterType');
-  //   const q = this.state.searchInput;
-  //   fetch(`/api/search/${endpoint}?q=${q}`)
-  //     .then(res => res.json())
-  //     .then(result => {
-
-  //     });
-  // }
+  componentDidUpdate() {
+    const { params } = this.context.route;
+    const endpoint = params.get('filterType');
+    const q = this.state.searchInput;
+    if (!q) {
+      // eslint-disable-next-line no-useless-return
+      return;
+    } else {
+      fetch(`/api/search/${endpoint}?q=${q}`)
+        .then(res => res.json())
+        .then(result => {
+        });
+    }
+  }
 
   handleChange(e) {
     const { value } = e.target;
@@ -35,13 +39,15 @@ export default class Discover extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const { params } = this.context.route;
-    const endpoint = params.get('filterType');
+    let endpoint = params.get('filterType');
     const q = this.state.searchInput;
-    // console.log('endpoint:', endpoint, 'q:', q);
+    if (!endpoint) {
+      window.location.hash = '#discover?filterType=track';
+      endpoint = 'track';
+    }
     fetch(`/api/search/${endpoint}?q=${q}`)
       .then(res => res.json())
       .then(result => {
-        // console.log(result);
       });
 
   }
@@ -91,13 +97,21 @@ export default class Discover extends React.Component {
         <div className="row mt-2">
           <div className="col-2">
             <a
+              data-filter="track"
+              className={`text-decoration-none ${trackTab}`}
+              onClick={handleFilterClick} >
+              Songs
+            </a>
+          </div>
+          <div className="col-2 me-2">
+            <a
               data-filter="artist"
               className={`text-decoration-none ${artistTab}`}
               onClick={handleFilterClick} >
               Artists
             </a>
           </div>
-          <div className="col-2 me-2">
+          <div className="col-2">
             <a
               data-filter="album"
               className={`text-decoration-none ${albumTab}`}
@@ -105,14 +119,7 @@ export default class Discover extends React.Component {
               Albums
             </a>
           </div>
-          <div className="col-2">
-            <a
-              data-filter="track"
-              className={`text-decoration-none ${trackTab}`}
-              onClick={handleFilterClick} >
-              Songs
-            </a>
-          </div>
+
         </div>
         { result !== null &&
           <div className="row">
