@@ -59,8 +59,7 @@ export default class AuthForm extends React.Component {
             onChange={handleChange}
             className="bg-light"
             required
-            autoFocus
-          />
+            autoFocus />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
@@ -69,9 +68,7 @@ export default class AuthForm extends React.Component {
           name="password"
           onChange={handleChange}
           className="bg-light"
-          required
-          autoFocus
-          />
+          required />
         </Form.Group>
         {this.state.error &&
           <div className="alert alert-danger py-1">{errorMsg}</div>

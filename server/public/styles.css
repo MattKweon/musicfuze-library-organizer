@@ -11,6 +11,7 @@
 
 .btn-alt {
   border: solid #6610f2;
+  background-color: transparent;
   color: #6610f2;
 }
 
@@ -18,4 +19,12 @@
 .btn-alt:hover {
   background-color: #a370f7;
   color: #ffff;
+}
+
+.search-bar {
+  border: solid #6610f2;
+}
+
+.current-tab {
+  border: solid red;
 }

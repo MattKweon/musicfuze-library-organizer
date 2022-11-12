@@ -3,13 +3,19 @@ import AppContext from '../lib/app-context';
 
 export default class Navbar extends React.Component {
   render() {
-    const { user } = this.context;
-    const containerJustifyContent = user
+    const { user, route } = this.context;
+    const justifyContent = user
       ? 'container justify-content-start'
-      : 'container';
+      : '';
+    const underlineHome = route.path !== ''
+      ? 'text-decoration-none'
+      : '';
+    const underlineDiscover = route.path !== 'discover'
+      ? 'text-decoration-none'
+      : '';
     return (
       <nav className="navbar color-nav">
-        <div className={containerJustifyContent}>
+        <div className={`container ${justifyContent}`}>
           <a href="#" className="navbar-brand">
             <img
               src="/images/logo.png"
@@ -21,8 +27,8 @@ export default class Navbar extends React.Component {
           <div>
             { user !== null &&
               <>
-                <a href="#" className="me-4">Home</a>
-                <a href="#discover" className="text-decoration-none">Discover</a>
+                <a href="#" className={`text-muted me-3 ${underlineHome}`}>Home</a>
+                <a href="#discover" className={`text-muted ${underlineDiscover}`}>Discover</a>
               </>
             }
             { user === null &&
