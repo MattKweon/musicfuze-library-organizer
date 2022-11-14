@@ -2,6 +2,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Redirect from '../components/redirect';
+import SearchResult from '../components/search-result';
 import AppContext from '../lib/app-context';
 
 export default class Discover extends React.Component {
@@ -48,6 +49,7 @@ export default class Discover extends React.Component {
     fetch(`/api/search/${endpoint}?q=${q}`)
       .then(res => res.json())
       .then(result => {
+        this.setState({ result });
       });
 
   }
@@ -65,18 +67,19 @@ export default class Discover extends React.Component {
 
     if (!user) return <Redirect to="sign-in" />;
 
+    const filterType = route.params.get('filterType');
     let artistTab, albumTab, trackTab;
-    if (route.params.get('filterType') === 'artist') {
+    if (filterType === 'artist') {
       artistTab = 'current-tab';
     } else {
       artistTab = '';
     }
-    if (route.params.get('filterType') === 'album') {
+    if (filterType === 'album') {
       albumTab = 'current-tab';
     } else {
       albumTab = '';
     }
-    if (route.params.get('filterType') === 'track') {
+    if (filterType === 'track') {
       trackTab = 'current-tab';
     } else {
       trackTab = '';
@@ -119,12 +122,11 @@ export default class Discover extends React.Component {
               Albums
             </a>
           </div>
-
         </div>
-        { result !== null &&
-          <div className="row">
-            <div>{result}</div>
-          </div>
+        { result &&
+          <SearchResult
+            result={result}
+            filterType={filterType} />
         }
       </div>
     );

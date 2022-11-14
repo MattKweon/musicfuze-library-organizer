@@ -22,8 +22,7 @@ export default class Auth extends React.Component {
           <div className="card p-3">
             <AuthForm
               action={route.path}
-              onSignIn={handleSignIn}
-            />
+              onSignIn={handleSignIn} />
           </div>
         </div>
       </div>
