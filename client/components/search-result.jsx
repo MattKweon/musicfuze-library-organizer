@@ -3,34 +3,66 @@ import React from 'react';
 export default class SearchResult extends React.Component {
   render() {
     const { result, filterType } = this.props;
-    let resultList;
-    if (filterType === 'track') {
-      resultList = result.map((item, index) => {
+    // eslint-disable-next-line array-callback-return
+    const resultList = result.map((item, index) => {
+      if (filterType === 'track') {
         return (
-          <div key="index" className="row">
-            <div className="col">
-              <div className="img-album">
-                <img src={item.cover} alt={`${item.title}`} />
+          <div key={index} className="row margin-neg">
+            <div className="col-2 ps-0">
+              <div className="img-album d-inline-block my-1">
+                <img
+                  src={item.cover}
+                  className="rounded img-fluid"
+                  alt={item.title} />
               </div>
-              <span>{item.title}, {item.name}</span>
             </div>
+            <div className="col-10 pt-3">
+              <span className="text-truncate">{item.title}</span>
+              <br />
+              <span className="text-muted">{item.name}</span>
+            </div>
+            <hr className="style1" />
           </div>
         );
-      });
-    } else if (filterType === 'artist') {
-      resultList = result.map((item, index) => {
+      } else if (filterType === 'artist') {
         return (
-          <div key="index" className="row">
-            <div className="col">
-              <div className="img-artist">
-                <img src={item.picture} alt="item.name" />
+          <div key={index} className="row margin-neg">
+            <div className="col-2 ps-0">
+              <div className="img-album d-inline-block my-1">
+                <img
+                  src={item.picture}
+                  className="img-fluid img-artist"
+                  alt={item.name} />
               </div>
-              <span>{item.name}</span>
             </div>
+            <div className="col-10 pt-4">
+              <span className="text-truncate">{item.name}</span>
+            </div>
+            <hr className="style1" />
           </div>
         );
-      });
-    }
+      } else if (filterType === 'album') {
+        return (
+          <div key={index} className="row margin-neg">
+            <div className="col-2 ps-0">
+              <div className="img-album d-inline-block my-1">
+                <img
+                  src={item.cover}
+                  className="rounded img-fluid"
+                  alt={item.title} />
+              </div>
+            </div>
+            <div className="col-10 pt-3">
+              <span className="text-truncate">{item.title}</span>
+              <br />
+              <span className="text-muted">{item.name}</span>
+            </div>
+            <hr className="style1" />
+          </div>
+        );
+      }
+    });
+
     return (
       <div className="container">{resultList}</div>
     );

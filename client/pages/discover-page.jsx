@@ -21,13 +21,14 @@ export default class Discover extends React.Component {
     const { params } = this.context.route;
     const endpoint = params.get('filterType');
     const q = this.state.searchInput;
-    if (!q) {
+    if (!endpoint || !q) {
       // eslint-disable-next-line no-useless-return
       return;
     } else {
       fetch(`/api/search/${endpoint}?q=${q}`)
         .then(res => res.json())
         .then(result => {
+          this.setState({ result });
         });
     }
   }
@@ -70,19 +71,19 @@ export default class Discover extends React.Component {
     const filterType = route.params.get('filterType');
     let artistTab, albumTab, trackTab;
     if (filterType === 'artist') {
-      artistTab = 'current-tab';
+      artistTab = 'tab-current';
     } else {
-      artistTab = '';
+      artistTab = 'tab-next';
     }
     if (filterType === 'album') {
-      albumTab = 'current-tab';
+      albumTab = 'tab-current';
     } else {
-      albumTab = '';
+      albumTab = 'tab-next';
     }
     if (filterType === 'track') {
-      trackTab = 'current-tab';
+      trackTab = 'tab-current';
     } else {
-      trackTab = '';
+      trackTab = 'tab-next';
     }
     return (
       <div className="container">
@@ -97,8 +98,8 @@ export default class Discover extends React.Component {
             <Button type="submit" className="btn-alt mt-3 w-auto">search</Button>
           </div>
         </Form>
-        <div className="row mt-2">
-          <div className="col-2">
+        <div className="row my-2">
+          <div className="col-2 ps-0">
             <a
               data-filter="track"
               className={`text-decoration-none ${trackTab}`}
@@ -106,7 +107,7 @@ export default class Discover extends React.Component {
               Songs
             </a>
           </div>
-          <div className="col-2 me-2">
+          <div className="col-2 ps-0 me-2">
             <a
               data-filter="artist"
               className={`text-decoration-none ${artistTab}`}
@@ -114,7 +115,7 @@ export default class Discover extends React.Component {
               Artists
             </a>
           </div>
-          <div className="col-2">
+          <div className="col-2 ps-0">
             <a
               data-filter="album"
               className={`text-decoration-none ${albumTab}`}
