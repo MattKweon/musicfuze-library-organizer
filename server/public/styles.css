@@ -11,6 +11,7 @@
 
 .btn-alt {
   border: solid #6610f2;
+  background-color: transparent;
   color: #6610f2;
 }
 
@@ -18,4 +19,35 @@
 .btn-alt:hover {
   background-color: #a370f7;
   color: #ffff;
+}
+
+.search-bar {
+  border: solid #6610f2;
+}
+
+.tab-current {
+  border: solid #a370f7;
+  border-radius: 5px;
+  background-color: #a370f7;
+  color: #ffff;
+}
+
+.tab-next {
+  color: #000;
+}
+
+.tab-current:hover {
+  color: #ffff;
+}
+
+.margin-neg {
+  margin: 0 0 -1rem -1.5rem;
+}
+
+.img-album {
+  width: 4rem;
+}
+
+.img-artist {
+  border-radius: 50%;
 }
