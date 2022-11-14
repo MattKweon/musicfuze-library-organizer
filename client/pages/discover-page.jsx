@@ -18,14 +18,15 @@ export default class Discover extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { params } = this.context.route;
+    const { params } = this.props.route;
     const endpoint = params.get('filterType');
     const prevEndpoint = prevProps.route.params.get('filterType');
-    const q = this.state.searchInput;
+    const q = params.get('q');
+    const prevQ = prevProps.route.params.get('q');
     if (!q) {
       // eslint-disable-next-line no-useless-return
-      return;
-    } else if (prevState.searchInput !== q || prevEndpoint !== endpoint) {
+      return null;
+    } else if (prevQ !== q || prevEndpoint !== endpoint) {
       fetch(`/api/search/${endpoint}?q=${q}`)
         .then(res => res.json())
         .then(result => {
@@ -41,29 +42,37 @@ export default class Discover extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { params } = this.context.route;
-    let endpoint = params.get('filterType');
+    const { params } = this.props.route;
+    const endpoint = params.get('filterType');
     const q = this.state.searchInput;
-    if (!endpoint) {
-      window.location.hash = '#discover?filterType=track';
-      endpoint = 'track';
+    let newHash = '#discover?';
+    if (endpoint) {
+      newHash += `filterType=${endpoint}`;
+    } else {
+      newHash += 'filterType=track';
     }
-    fetch(`/api/search/${endpoint}?q=${q}`)
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ result });
-      });
-
+    if (q) {
+      newHash += `&q=${q}`;
+    }
+    window.location.hash = newHash;
   }
 
   handleFilterClick(e) {
     e.preventDefault();
     const filterType = e.target.getAttribute('data-filter');
-    window.location.hash = `#discover?filterType=${filterType}`;
+    const q = this.props.route.params.get('q');
+    let newHash = '#discover?';
+    if (q) {
+      newHash += `filterType=${filterType}&q=${q}`;
+    } else {
+      newHash += `filterType=${filterType}`;
+    }
+    window.location.hash = newHash;
   }
 
   render() {
-    const { user, route } = this.context;
+    const { user } = this.context;
+    const { route } = this.props;
     const { result } = this.state;
     const { handleChange, handleSubmit, handleFilterClick } = this;
 
