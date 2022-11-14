@@ -17,14 +17,15 @@ export default class Discover extends React.Component {
     this.handleFilterClick = this.handleFilterClick.bind(this);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     const { params } = this.context.route;
     const endpoint = params.get('filterType');
+    const prevEndpoint = prevProps.route.params.get('filterType');
     const q = this.state.searchInput;
-    if (!endpoint || !q) {
+    if (!q) {
       // eslint-disable-next-line no-useless-return
       return;
-    } else {
+    } else if (prevState.searchInput !== q || prevEndpoint !== endpoint) {
       fetch(`/api/search/${endpoint}?q=${q}`)
         .then(res => res.json())
         .then(result => {

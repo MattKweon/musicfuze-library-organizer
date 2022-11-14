@@ -37,14 +37,14 @@ export default class App extends React.Component {
   }
 
   renderPage() {
-    const { path } = this.state.route;
-    if (path === '') {
+    const { route } = this.state;
+    if (route.path === '') {
       return <Home />;
     }
-    if (path === 'discover') {
-      return <Discover />;
+    if (route.path === 'discover') {
+      return <Discover route={route} />;
     }
-    if (path === 'sign-in' || path === 'sign-up') {
+    if (route.path === 'sign-in' || route.path === 'sign-up') {
       return <Auth />;
     }
   }
