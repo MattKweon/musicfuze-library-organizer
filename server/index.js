@@ -98,8 +98,10 @@ app.get('/api/search/:endpoint', (req, res, next) => {
         const albumList = data.map(({ title, cover, artist: { name } }) => ({ title, cover, name }));
         res.status(201).json(albumList);
       } else if (endpoint === 'track') {
-        // eslint-disable-next-line camelcase
-        const trackList = data.map(({ title, explicit_lyrics, artist: { name }, album: { cover } }) => ({ title, explicit_lyrics, name, cover }));
+        const trackList = data.map(
+          // eslint-disable-next-line camelcase
+          ({ id, title, explicit_lyrics, artist: { id: artistId, name: artistName }, album: { id: albumId, cover: albumCover } }) => ({ id, title, explicit_lyrics, artistId, artistName, albumId, albumCover })
+        );
         res.status(201).json(trackList);
       }
     });
@@ -109,13 +111,13 @@ app.use(authorizationMiddleware);
 
 app.post('/api/save/library', (req, res, next) => {
   const { accountId } = req.account;
-  const { title, name, picture, album, cover } = req.body;
+  const { id, title, artistId, albumId } = req.body;
   const sql = `
-    insert into "tracks" ("title", "name", "artistPictureUrl", "album", "albumCoverUrl")
+    insert into "tracks" ("trackId", "title", "artistId", "albumId")
     values ($1, $2, $3, $4, $5)
     returning "trackId"
   `;
-  const params = [title, name, picture, album, cover];
+  const params = [id, title, artistId, albumId];
   db.query(sql, params)
     .then(result => {
       const [trackId] = result.rows;
