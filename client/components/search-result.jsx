@@ -26,7 +26,7 @@ export default class SearchResult extends React.Component {
     fetch('/api/save/library', options)
       .then(res => res.json())
       .then(result => {
-        this.setState({ addedToLibrary: true });
+        // this.setState({ addedToLibrary: true });
       })
       .catch(err => console.error(err));
   }

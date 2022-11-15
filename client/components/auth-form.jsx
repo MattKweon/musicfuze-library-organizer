@@ -36,7 +36,7 @@ export default class AuthForm extends React.Component {
           window.location.hash = 'sign-in';
         } else if (result.error) {
           this.setState({ error: result.error });
-        } else if (result.user && result.token) {
+        } else if (result.account && result.token) {
           this.props.onSignIn(result);
         }
       });

@@ -31,7 +31,8 @@ export default class Discover extends React.Component {
         .then(res => res.json())
         .then(result => {
           this.setState({ result });
-        });
+        })
+        .catch(err => console.error(err));
     }
   }
 
