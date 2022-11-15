@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
 const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -78,7 +79,7 @@ app.post('/api/auth/sign-in', (req, res, next) => {
           }
           const payload = { accountId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-          res.json({ token, user: payload });
+          res.json({ token, account: payload });
         });
     });
 });
@@ -102,6 +103,36 @@ app.get('/api/search/:endpoint', (req, res, next) => {
         res.status(201).json(trackList);
       }
     });
+});
+
+app.use(authorizationMiddleware);
+
+app.post('/api/save/library', (req, res, next) => {
+  const { accountId } = req.account;
+  const { title, name, picture, album, cover } = req.body;
+  const sql = `
+    insert into "tracks" ("title", "name", "artistPictureUrl", "album", "albumCoverUrl")
+    values ($1, $2, $3, $4, $5)
+    returning "trackId"
+  `;
+  const params = [title, name, picture, album, cover];
+  db.query(sql, params)
+    .then(result => {
+      const [trackId] = result.rows;
+      const sql = `
+          insert into "library" ("accountId", "trackId")
+          values ($1, $2)
+          returning "trackId"
+        `;
+      const params = [accountId, trackId.trackId];
+      db.query(sql, params)
+        .then(result => {
+          const [trackId] = result.rows;
+          res.status(201).json(trackId);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);

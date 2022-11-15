@@ -18,9 +18,9 @@ CREATE TABLE "public"."accounts" (
 
 
 CREATE TABLE "public"."tracks" (
-	"trackId" int NOT NULL,
+	"trackId" serial NOT NULL,
+	"title" TEXT NOT NULL,
 	"name" TEXT NOT NULL,
-	"artist" TEXT NOT NULL,
 	"artistPictureUrl" TEXT NOT NULL,
 	"album" TEXT NOT NULL,
 	"albumCoverUrl" TEXT NOT NULL,
@@ -28,8 +28,6 @@ CREATE TABLE "public"."tracks" (
 ) WITH (
   OIDS=FALSE
 );
-
-
 
 CREATE TABLE "public"."playlists" (
 	"playlistId" serial NOT NULL,
