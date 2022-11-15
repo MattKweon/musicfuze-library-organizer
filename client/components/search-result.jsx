@@ -1,4 +1,5 @@
 import React from 'react';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 export default class SearchResult extends React.Component {
   render() {
@@ -16,12 +17,22 @@ export default class SearchResult extends React.Component {
                   alt={item.title} />
               </div>
             </div>
-            <div className="col-10 pt-3">
-              <span className="text-truncate">{item.title}</span>
+            <div className="col-9 pt-3">
+              <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{item.title}</span>
               <br />
               <span className="text-muted">{item.name}</span>
             </div>
-            <hr className="style1" />
+            <Dropdown className="col-1">
+              <Dropdown.Toggle
+                className="material-symbols-outlined dropdown-btn pt-4 ps-3"
+                id="dropdown-basic" >
+                more_horiz
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item href="#/action-1">Add to Library</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <hr className="style1 w-100" />
           </div>
         );
       } else if (filterType === 'artist') {

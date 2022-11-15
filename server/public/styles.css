@@ -1,28 +1,5 @@
 .color-nav {
   background-color: #e2d9f3;
-  padding: 0;
-}
-
-.btn-main {
-  border: #6610f2;
-  background-color: #6610f2;
-  color: #ffff;
-}
-
-.btn-alt {
-  border: solid #6610f2;
-  background-color: transparent;
-  color: #6610f2;
-}
-
-.btn-main:hover,
-.btn-alt:hover {
-  background-color: #a370f7;
-  color: #ffff;
-}
-
-.search-bar {
-  border: solid #6610f2;
 }
 
 .tab-current {
@@ -32,16 +9,16 @@
   color: #ffff;
 }
 
-.tab-next {
-  color: #000;
-}
-
 .tab-current:hover {
   color: #ffff;
 }
 
-.margin-neg {
-  margin: 0 0 -1rem -1.5rem;
+.tab-next {
+  color: #000;
+}
+
+.tab-next:hover {
+  color: #000;
 }
 
 .img-album {

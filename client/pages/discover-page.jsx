@@ -117,7 +117,7 @@ export default class Discover extends React.Component {
               Songs
             </a>
           </div>
-          <div className="col-2 ps-0 me-2">
+          <div className="col-2 ps-0">
             <a
               data-filter="artist"
               className={`text-decoration-none ${artistTab}`}
