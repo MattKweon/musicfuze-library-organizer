@@ -4,9 +4,16 @@ import Dropdown from 'react-bootstrap/Dropdown';
 export default class SearchResult extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { onClick: false };
+    this.state = { addedToLibrary: false };
 
+    this.startTimer = this.startTimer.bind(this);
     this.handleAddToLibary = this.handleAddToLibary.bind(this);
+  }
+
+  startTimer() {
+    setTimeout(() => {
+      this.setState({ addedToLibrary: false });
+    }, 2000);
   }
 
   handleAddToLibary(e) {
@@ -26,12 +33,14 @@ export default class SearchResult extends React.Component {
     fetch('/api/save/library', options)
       .then(res => res.json())
       .then(result => {
-        // this.setState({ addedToLibrary: true });
+        this.startTimer();
+        this.setState({ addedToLibrary: true });
       })
       .catch(err => console.error(err));
   }
 
   render() {
+    const { addedToLibrary } = this.state;
     const { result, filterType } = this.props;
     const { handleAddToLibary } = this;
     // eslint-disable-next-line array-callback-return
@@ -39,7 +48,7 @@ export default class SearchResult extends React.Component {
       if (filterType === 'track') {
         return (
           <div key={index} data-id={index} className="row margin-neg">
-            <div className="col-2 ps-0">
+            <div className="col-2 col-md-1 ps-0">
               <div className="img-album d-inline-block my-1">
                 <img
                   src={item.albumCover}
@@ -47,7 +56,7 @@ export default class SearchResult extends React.Component {
                   alt={item.title} />
               </div>
             </div>
-            <div className="col-9 pt-3">
+            <div className="col-9 col-md-10 pt-3">
               <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{item.title}</span>
               <br />
               <span className="text-muted">{item.artistName}</span>
@@ -105,7 +114,19 @@ export default class SearchResult extends React.Component {
     });
 
     return (
-      <div className="container">{resultList}</div>
+      <>
+        <div className="container">{resultList}</div>
+        {addedToLibrary &&
+          <div className="fixed-top">
+            <div className="modal-added-to">
+              <span className="material-symbols-outlined check mt-4">
+                check_circle
+              </span>
+              <h2 className="modal-added-to-msg mt-1">Added to library</h2>
+            </div>
+          </div>
+        }
+      </>
     );
   }
 }

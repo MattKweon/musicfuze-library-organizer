@@ -28,3 +28,25 @@
 .img-artist {
   border-radius: 50%;
 }
+
+.modal-added-to {
+  background-color: #545454;
+  border-radius: 5px;
+  width: 200px;
+  height: 200px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.check {
+  font-size: 100px !important;
+  color: #d3d3d3;
+  justify-content: center;
+}
+
+.modal-added-to-msg {
+  color: #d3d3d3;
+}
