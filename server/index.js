@@ -115,18 +115,18 @@ app.post('/api/save/library', (req, res, next) => {
   const sql = `
     insert into "tracks" ("trackId", "title", "artistId", "albumId")
     values ($1, $2, $3, $4)
-    returning "trackId"
+    on conflict ("trackId")
+    do nothing
   `;
   const params = [id, title, artistId, albumId];
   db.query(sql, params)
     .then(result => {
-      const [trackId] = result.rows;
       const sql = `
           insert into "library" ("userId", "trackId")
           values ($1, $2)
           returning "trackId"
         `;
-      const params = [userId, trackId.trackId];
+      const params = [userId, id];
       db.query(sql, params)
         .then(result => {
           const [trackId] = result.rows;

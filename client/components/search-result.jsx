@@ -19,8 +19,8 @@ export default class SearchResult extends React.Component {
   handleAddToLibary(e) {
     e.preventDefault();
     const saveId = e.target.closest('[data-id]').getAttribute('data-id');
-    const { result } = this.props;
-    const songInfo = (({ id, title, artistId, albumId }) => ({ id, title, artistId, albumId }))(result[saveId]);
+    const { id, title, artistId, albumId } = this.props.result[saveId];
+    const songInfo = { id, title, artistId, albumId };
     const token = window.localStorage.getItem('user-jwt');
     const options = {
       method: 'POST',
