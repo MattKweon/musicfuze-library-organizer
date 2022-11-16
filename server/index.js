@@ -114,7 +114,7 @@ app.post('/api/save/library', (req, res, next) => {
   const { id, title, artistId, albumId } = req.body;
   const sql = `
     insert into "tracks" ("trackId", "title", "artistId", "albumId")
-    values ($1, $2, $3, $4, $5)
+    values ($1, $2, $3, $4)
     returning "trackId"
   `;
   const params = [id, title, artistId, albumId];
