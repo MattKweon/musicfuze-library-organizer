@@ -31,7 +31,8 @@ export default class Discover extends React.Component {
         .then(res => res.json())
         .then(result => {
           this.setState({ result });
-        });
+        })
+        .catch(err => console.error(err));
     }
   }
 
@@ -99,17 +100,21 @@ export default class Discover extends React.Component {
       <div className="container">
         <Form onSubmit={handleSubmit}>
           <div className="row">
-            <input
-              type="text"
-              name="search"
-              placeholder="Search song, artist, album... etc"
-              onChange={handleChange}
-              className="form-control search-bar mt-3 me-2 w-75 d-inline-block" />
-            <Button type="submit" className="btn-alt mt-3 w-auto">search</Button>
+            <div className="col-9 col-sm-10">
+              <input
+                type="text"
+                name="search"
+                placeholder="Search song, artist, album... etc"
+                onChange={handleChange}
+                className="form-control search-bar mt-3 d-inline-block" />
+            </div>
+            <div className="col-2 ps-0">
+              <Button type="submit" className="btn-alt mt-3">search</Button>
+            </div>
           </div>
         </Form>
         <div className="row my-2">
-          <div className="col-2 ps-0">
+          <div className="col-2 col-md-1">
             <a
               data-filter="track"
               className={`text-decoration-none ${trackTab}`}
@@ -117,7 +122,7 @@ export default class Discover extends React.Component {
               Songs
             </a>
           </div>
-          <div className="col-2 ps-0 me-2">
+          <div className="col-2 col-md-1">
             <a
               data-filter="artist"
               className={`text-decoration-none ${artistTab}`}
@@ -125,7 +130,7 @@ export default class Discover extends React.Component {
               Artists
             </a>
           </div>
-          <div className="col-2 ps-0">
+          <div className="col-2 col-md-1">
             <a
               data-filter="album"
               className={`text-decoration-none ${albumTab}`}

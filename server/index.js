@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
 const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -36,7 +37,7 @@ app.post('/api/auth/sign-up', (req, res, next) => {
         values ($1, $2)
         on conflict ("username")
         do nothing
-        returning "accountId", "username"
+        returning "userId", "username"
       `;
       const params = [username, hashedPassword];
       return db.query(sql, params);
@@ -57,7 +58,7 @@ app.post('/api/auth/sign-in', (req, res, next) => {
     throw new ClientError(401, 'invalid login');
   }
   const sql = `
-    select "accountId",
+    select "userId",
            "hashedPassword"
       from "accounts"
      where "username" = $1
@@ -69,14 +70,14 @@ app.post('/api/auth/sign-in', (req, res, next) => {
       if (!user) {
         throw new ClientError(401, 'invalid login');
       }
-      const { accountId, hashedPassword } = user;
+      const { userId, hashedPassword } = user;
       return argon2
         .verify(hashedPassword, password)
         .then(isMatching => {
           if (!isMatching) {
             throw new ClientError(401, 'invalid login');
           }
-          const payload = { accountId, username };
+          const payload = { userId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
           res.json({ token, user: payload });
         });
@@ -97,11 +98,43 @@ app.get('/api/search/:endpoint', (req, res, next) => {
         const albumList = data.map(({ title, cover, artist: { name } }) => ({ title, cover, name }));
         res.status(201).json(albumList);
       } else if (endpoint === 'track') {
-        // eslint-disable-next-line camelcase
-        const trackList = data.map(({ title, explicit_lyrics, artist: { name }, album: { cover } }) => ({ title, explicit_lyrics, name, cover }));
+        const trackList = data.map(
+          // eslint-disable-next-line camelcase
+          ({ id, title, explicit_lyrics, artist: { id: artistId, name: artistName }, album: { id: albumId, cover: albumCover } }) => ({ id, title, explicit_lyrics, artistId, artistName, albumId, albumCover })
+        );
         res.status(201).json(trackList);
       }
     });
+});
+
+app.use(authorizationMiddleware);
+
+app.post('/api/save/library', (req, res, next) => {
+  const { userId } = req.user;
+  const { id, title, artistId, albumId } = req.body;
+  const sql = `
+    insert into "tracks" ("trackId", "title", "artistId", "albumId")
+    values ($1, $2, $3, $4)
+    on conflict ("trackId")
+    do nothing
+  `;
+  const params = [id, title, artistId, albumId];
+  db.query(sql, params)
+    .then(result => {
+      const sql = `
+          insert into "library" ("userId", "trackId")
+          values ($1, $2)
+          returning "trackId"
+        `;
+      const params = [userId, id];
+      db.query(sql, params)
+        .then(result => {
+          const [trackId] = result.rows;
+          res.status(201).json(trackId);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);
