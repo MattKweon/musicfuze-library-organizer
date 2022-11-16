@@ -37,7 +37,7 @@ app.post('/api/auth/sign-up', (req, res, next) => {
         values ($1, $2)
         on conflict ("username")
         do nothing
-        returning "accountId", "username"
+        returning "userId", "username"
       `;
       const params = [username, hashedPassword];
       return db.query(sql, params);
@@ -58,7 +58,7 @@ app.post('/api/auth/sign-in', (req, res, next) => {
     throw new ClientError(401, 'invalid login');
   }
   const sql = `
-    select "accountId",
+    select "userId",
            "hashedPassword"
       from "accounts"
      where "username" = $1
@@ -70,16 +70,16 @@ app.post('/api/auth/sign-in', (req, res, next) => {
       if (!user) {
         throw new ClientError(401, 'invalid login');
       }
-      const { accountId, hashedPassword } = user;
+      const { userId, hashedPassword } = user;
       return argon2
         .verify(hashedPassword, password)
         .then(isMatching => {
           if (!isMatching) {
             throw new ClientError(401, 'invalid login');
           }
-          const payload = { accountId, username };
+          const payload = { userId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-          res.json({ token, account: payload });
+          res.json({ token, user: payload });
         });
     });
 });
@@ -110,7 +110,7 @@ app.get('/api/search/:endpoint', (req, res, next) => {
 app.use(authorizationMiddleware);
 
 app.post('/api/save/library', (req, res, next) => {
-  const { accountId } = req.account;
+  const { userId } = req.user;
   const { id, title, artistId, albumId } = req.body;
   const sql = `
     insert into "tracks" ("trackId", "title", "artistId", "albumId")
@@ -122,11 +122,11 @@ app.post('/api/save/library', (req, res, next) => {
     .then(result => {
       const [trackId] = result.rows;
       const sql = `
-          insert into "library" ("accountId", "trackId")
+          insert into "library" ("userId", "trackId")
           values ($1, $2)
           returning "trackId"
         `;
-      const params = [accountId, trackId.trackId];
+      const params = [userId, trackId.trackId];
       db.query(sql, params)
         .then(result => {
           const [trackId] = result.rows;
