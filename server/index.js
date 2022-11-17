@@ -159,6 +159,7 @@ app.get('/api/user/library', (req, res, next) => {
       join "artists" as "art" using ("artistId")
       join "albums" as "alb" using ("albumId")
       where "l"."userId" = '${userId}'
+      order by "t"."title"
   `;
   db.query(sql)
     .then(result => {
