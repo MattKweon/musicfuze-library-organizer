@@ -2,6 +2,10 @@
   background-color: #e2d9f3;
 }
 
+.color-icons {
+  color: #a370f7;
+}
+
 .tab-current {
   border: solid #a370f7;
   border-radius: 5px;

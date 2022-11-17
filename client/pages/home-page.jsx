@@ -45,7 +45,7 @@ export default class Home extends React.Component {
     return (
       <>
         {content
-          ? <a href="#">
+          ? <a href="#" className="color-icons">
             <span className="material-symbols-outlined">chevron_left</span>
             <span className="position-absolute">Library</span>
           </a>
@@ -57,7 +57,7 @@ export default class Home extends React.Component {
           : <div className="container" onClick={handleCategoryClick}>
             <div data-category="songs" className="row clickable-row">
               <div className="col-1 p-0">
-                <span className="material-symbols-outlined">
+                <span className="material-symbols-outlined color-icons">
                   music_note
                 </span>
               </div>
@@ -65,7 +65,7 @@ export default class Home extends React.Component {
                 <span>Songs</span>
               </div>
               <div className="col-1">
-                <span className="material-symbols-outlined">
+                <span className="material-symbols-outlined color-icons">
                   chevron_right
                 </span>
               </div>
