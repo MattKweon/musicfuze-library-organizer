@@ -8,8 +8,24 @@ export default class Home extends React.Component {
 
     return (
       <>
-        <div />
         <h1 className="fw-bolder">Library</h1>
+        <div className="container">
+          <div className="row clickable-row" href="#?libCategory=songs">
+            <div className="col-1 p-0">
+              <span className="material-symbols-outlined">
+                music_note
+              </span>
+            </div>
+            <div className="col-10 p-0">
+              <span>Songs</span>
+            </div>
+            <div className="col-1">
+              <span className="material-symbols-outlined">
+                chevron_right
+              </span>
+            </div>
+          </div>
+        </div>
       </>
     );
   }
