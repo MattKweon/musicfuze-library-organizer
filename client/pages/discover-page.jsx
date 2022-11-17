@@ -139,10 +139,8 @@ export default class Discover extends React.Component {
             </a>
           </div>
         </div>
-        { result &&
-          <SearchResult
-            result={result}
-            filterType={filterType} />
+        {result &&
+          <SearchResult result={result} filterType={filterType} />
         }
       </div>
     );

@@ -150,10 +150,10 @@ app.post('/api/save/library', (req, res, next) => {
 app.get('/api/user/library', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    select "l"."trackId",
+    select "l"."trackId" as "id",
            "t"."title",
-           "art"."name",
-           "alb"."coverUrl"
+           "art"."name" as "artistName",
+           "alb"."coverUrl" as "albumCover"
       from "library" as "l"
       join "tracks" as "t" using ("trackId")
       join "artists" as "art" using ("artistId")

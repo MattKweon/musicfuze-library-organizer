@@ -49,7 +49,7 @@ export default class SearchResult extends React.Component {
         return (
           <div key={index} data-id={index} className="row margin-neg">
             <div className="col-2 col-md-1 ps-0">
-              <div className="img-album d-inline-block my-1">
+              <div className="img-album my-1">
                 <img
                   src={item.albumCover}
                   className="rounded img-fluid"
@@ -78,7 +78,7 @@ export default class SearchResult extends React.Component {
         return (
           <div key={index} className="row margin-neg">
             <div className="col-2 ps-0">
-              <div className="img-album d-inline-block my-1">
+              <div className="img-album my-1">
                 <img
                   src={item.artistPicture}
                   className="img-fluid img-artist"
@@ -95,7 +95,7 @@ export default class SearchResult extends React.Component {
         return (
           <div key={index} className="row margin-neg">
             <div className="col-2 ps-0">
-              <div className="img-album d-inline-block my-1">
+              <div className="img-album my-1">
                 <img
                   src={item.albumCover}
                   className="rounded img-fluid"
@@ -112,7 +112,6 @@ export default class SearchResult extends React.Component {
         );
       }
     });
-
     return (
       <>
         <div className="container">{resultList}</div>
