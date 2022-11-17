@@ -31,9 +31,7 @@ CREATE TABLE "public"."tracks" (
 
 CREATE TABLE "public"."library" (
 	"userId" int NOT NULL,
-	"trackId" int NOT NULL,
-	"artistId" int NOT NULL,
-	"albumId" int NOT NULL
+	"trackId" int NOT NULL
 ) WITH (
   OIDS=FALSE
 );
@@ -63,6 +61,8 @@ CREATE TABLE "public"."albums" (
 
 
 
+ALTER TABLE "tracks" ADD CONSTRAINT "tracks_fk0" FOREIGN KEY ("artistId") REFERENCES "artists"("artistId");
+ALTER TABLE "tracks" ADD CONSTRAINT "tracks_fk1" FOREIGN KEY ("albumId") REFERENCES "albums"("albumId");
 
 ALTER TABLE "library" ADD CONSTRAINT "library_fk0" FOREIGN KEY ("userId") REFERENCES "accounts"("userId");
 ALTER TABLE "library" ADD CONSTRAINT "library_fk1" FOREIGN KEY ("trackId") REFERENCES "tracks"("trackId");

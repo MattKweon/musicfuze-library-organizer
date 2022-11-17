@@ -132,17 +132,38 @@ app.post('/api/save/library', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       const sql = `
-        insert into "library" ("userId", "trackId", "artistId", "albumId")
-        values ($1, $2, $3, $4)
+        insert into "library" ("userId", "trackId")
+        values ($1, $2)
         returning "trackId"
       `;
-      const params = [userId, id, artistId, albumId];
+      const params = [userId, id];
       db.query(sql, params)
         .then(result => {
           const [trackId] = result.rows;
           res.status(201).json(trackId);
         })
         .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/user/library', (req, res, next) => {
+  const { userId } = req.user;
+  const sql = `
+    select "l"."trackId",
+           "t"."title",
+           "art"."name",
+           "alb"."coverUrl"
+      from "library" as "l"
+      join "tracks" as "t" using ("trackId")
+      join "artists" as "art" using ("artistId")
+      join "albums" as "alb" using ("albumId")
+      where "l"."userId" = '${userId}'
+  `;
+  db.query(sql)
+    .then(result => {
+      const trackList = result.rows;
+      res.status(201).json(trackList);
     })
     .catch(err => next(err));
 });

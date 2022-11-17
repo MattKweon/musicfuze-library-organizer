@@ -7,7 +7,10 @@ export default class Home extends React.Component {
     if (!this.context.user) return <Redirect to="sign-in" />;
 
     return (
-      <h1>home-page</h1>
+      <>
+        <div />
+        <h1 className="fw-bolder">Library</h1>
+      </>
     );
   }
 }
