@@ -147,6 +147,26 @@ app.post('/api/save/library', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/create/playlist', (req, res, next) => {
+  const { userId } = req.user;
+  const { name } = req.body;
+  if (!name) {
+    throw new ClientError(400, 'playlist name is required');
+  }
+  const sql = `
+    insert into "playlist" ("userId", "name")
+    values ($1, $2)
+    returning "playlistId"
+  `;
+  const params = [userId, name];
+  db.query(sql, params)
+    .then(result => {
+      const [playlistId] = result.rows;
+      res.status(201).json(playlistId);
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/user/library', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
