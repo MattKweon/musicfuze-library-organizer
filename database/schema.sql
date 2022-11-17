@@ -29,40 +29,11 @@ CREATE TABLE "public"."tracks" (
 
 
 
-CREATE TABLE "public"."playlists" (
-	"playlistId" serial NOT NULL,
-	"name" TEXT NOT NULL,
-	"userId" int NOT NULL,
-	CONSTRAINT "playlists_pk" PRIMARY KEY ("playlistId")
-) WITH (
-  OIDS=FALSE
-);
-
-
-
-CREATE TABLE "public"."playlistTracks" (
-	"playlistId" int NOT NULL,
-	"trackId" serial NOT NULL
-) WITH (
-  OIDS=FALSE
-);
-
-
-
 CREATE TABLE "public"."library" (
 	"userId" int NOT NULL,
-	"trackId" int NOT NULL
-) WITH (
-  OIDS=FALSE
-);
-
-
-
-CREATE TABLE "public"."albums" (
-	"albumId" int NOT NULL,
-	"title" TEXT NOT NULL,
-	"coverUrl" TEXT NOT NULL,
-	CONSTRAINT "albums_pk" PRIMARY KEY ("albumId")
+	"trackId" int NOT NULL,
+	"artistId" int NOT NULL,
+	"albumId" int NOT NULL
 ) WITH (
   OIDS=FALSE
 );
@@ -80,12 +51,18 @@ CREATE TABLE "public"."artists" (
 
 
 
+CREATE TABLE "public"."albums" (
+	"albumId" int NOT NULL,
+	"title" TEXT NOT NULL,
+	"coverUrl" TEXT NOT NULL,
+	CONSTRAINT "albums_pk" PRIMARY KEY ("albumId")
+) WITH (
+  OIDS=FALSE
+);
 
 
-ALTER TABLE "playlists" ADD CONSTRAINT "playlists_fk0" FOREIGN KEY ("userId") REFERENCES "accounts"("userId");
 
-ALTER TABLE "playlistTracks" ADD CONSTRAINT "playlistTracks_fk0" FOREIGN KEY ("playlistId") REFERENCES "playlists"("playlistId");
-ALTER TABLE "playlistTracks" ADD CONSTRAINT "playlistTracks_fk1" FOREIGN KEY ("trackId") REFERENCES "tracks"("trackId");
+
 
 ALTER TABLE "library" ADD CONSTRAINT "library_fk0" FOREIGN KEY ("userId") REFERENCES "accounts"("userId");
 ALTER TABLE "library" ADD CONSTRAINT "library_fk1" FOREIGN KEY ("trackId") REFERENCES "tracks"("trackId");

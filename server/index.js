@@ -92,15 +92,14 @@ app.get('/api/search/:endpoint', (req, res, next) => {
     .then(result => {
       const data = result.data;
       if (endpoint === 'artist') {
-        const artistList = data.map(({ name, picture }) => ({ name, picture }));
+        const artistList = data.map(({ id: artistId, name: artistName, picture: artistPicture }) => ({ artistId, artistName, artistPicture }));
         res.status(201).json(artistList);
       } else if (endpoint === 'album') {
-        const albumList = data.map(({ title, cover, artist: { name } }) => ({ title, cover, name }));
+        const albumList = data.map(({ id: albumId, title: albumTitle, cover: albumCover, artist: { name: artistName } }) => ({ albumId, albumTitle, albumCover, artistName }));
         res.status(201).json(albumList);
       } else if (endpoint === 'track') {
         const trackList = data.map(
-          // eslint-disable-next-line camelcase
-          ({ id, title, explicit_lyrics, artist: { id: artistId, name: artistName }, album: { id: albumId, cover: albumCover } }) => ({ id, title, explicit_lyrics, artistId, artistName, albumId, albumCover })
+          ({ id, title, artist: { id: artistId, name: artistName, picture: artistPicture }, album: { id: albumId, title: albumTitle, cover: albumCover } }) => ({ id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover })
         );
         res.status(201).json(trackList);
       }
@@ -111,22 +110,33 @@ app.use(authorizationMiddleware);
 
 app.post('/api/save/library', (req, res, next) => {
   const { userId } = req.user;
-  const { id, title, artistId, albumId } = req.body;
+  const { id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover } = req.body;
   const sql = `
-    insert into "tracks" ("trackId", "title", "artistId", "albumId")
-    values ($1, $2, $3, $4)
+    with "insertTrack" as (
+      insert into "tracks" ("trackId", "title", "artistId", "albumId")
+    values ($1, $2, $3, $6)
     on conflict ("trackId")
     do nothing
+    ), "insertArtist" as (
+      insert into "artists" ("artistId", "name", "pictureUrl")
+    values ($3, $4, $5)
+    on conflict ("artistId")
+    do nothing
+    )
+    insert into "albums" ("albumId", "title", "coverUrl")
+    values ($6, $7, $8)
+    on conflict ("albumId")
+    do nothing;
   `;
-  const params = [id, title, artistId, albumId];
+  const params = [id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover];
   db.query(sql, params)
     .then(result => {
       const sql = `
-          insert into "library" ("userId", "trackId")
-          values ($1, $2)
-          returning "trackId"
-        `;
-      const params = [userId, id];
+        insert into "library" ("userId", "trackId", "artistId", "albumId")
+        values ($1, $2, $3, $4)
+        returning "trackId"
+      `;
+      const params = [userId, id, artistId, albumId];
       db.query(sql, params)
         .then(result => {
           const [trackId] = result.rows;

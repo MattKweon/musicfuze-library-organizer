@@ -19,8 +19,8 @@ export default class SearchResult extends React.Component {
   handleAddToLibary(e) {
     e.preventDefault();
     const saveId = e.target.closest('[data-id]').getAttribute('data-id');
-    const { id, title, artistId, albumId } = this.props.result[saveId];
-    const songInfo = { id, title, artistId, albumId };
+    const { id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover } = this.props.result[saveId];
+    const songInfo = { id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover };
     const token = window.localStorage.getItem('user-jwt');
     const options = {
       method: 'POST',
@@ -80,13 +80,13 @@ export default class SearchResult extends React.Component {
             <div className="col-2 ps-0">
               <div className="img-album d-inline-block my-1">
                 <img
-                  src={item.picture}
+                  src={item.artistPicture}
                   className="img-fluid img-artist"
-                  alt={item.name} />
+                  alt={item.artistName} />
               </div>
             </div>
             <div className="col-10 pt-4">
-              <span className="text-truncate">{item.name}</span>
+              <span className="text-truncate">{item.artistName}</span>
             </div>
             <hr className="style1" />
           </div>
@@ -97,15 +97,15 @@ export default class SearchResult extends React.Component {
             <div className="col-2 ps-0">
               <div className="img-album d-inline-block my-1">
                 <img
-                  src={item.cover}
+                  src={item.albumCover}
                   className="rounded img-fluid"
-                  alt={item.title} />
+                  alt={item.albumTitle} />
               </div>
             </div>
             <div className="col-10 pt-3">
-              <span className="text-truncate">{item.title}</span>
+              <span className="text-truncate">{item.albumTitle}</span>
               <br />
-              <span className="text-muted">{item.name}</span>
+              <span className="text-muted">{item.artistName}</span>
             </div>
             <hr className="style1" />
           </div>
