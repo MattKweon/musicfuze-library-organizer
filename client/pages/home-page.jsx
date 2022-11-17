@@ -45,13 +45,11 @@ export default class Home extends React.Component {
     return (
       <>
         {content
-          ? <>
-            <span className="material-symbols-outlined">
-              chevron_left
-            </span>
-            <span>Library</span>
-          </>
-          : <div className="pb-5" />
+          ? <a href="#">
+            <span className="material-symbols-outlined">chevron_left</span>
+            <span className="position-absolute">Library</span>
+          </a>
+          : <div className="pb-4" />
         }
         <h1 className="fw-bolder">{pageHeader}</h1>
         {content === 'songs'
