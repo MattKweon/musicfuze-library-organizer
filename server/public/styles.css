@@ -54,3 +54,23 @@
 .modal-added-to-msg {
   color: #d3d3d3;
 }
+
+.add-playlist-container {
+  background-color: #545454;
+  border-radius: 5px;
+  height: 7rem;
+  width: 7rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.playlist-img-container {
+  background-color: #545454;
+  border-radius: 5px;
+  height: 7rem;
+  width: 7rem;
+}
+
+.modal-backdrop {
+  background-color: #545454;
+}
