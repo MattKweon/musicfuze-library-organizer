@@ -71,6 +71,17 @@
   width: 7rem;
 }
 
-.modal-backdrop {
-  background-color: #545454;
+.modal-background {
+  background-color: rgb(0, 0, 0, 0.6);
+}
+
+.modal-container {
+  background-color: #ffff;
+  border-radius: 5px;
+  height: 11rem;
+  width: 18rem;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

@@ -1,4 +1,6 @@
 import React from 'react';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import AppContext from '../lib/app-context';
 
 export default class SavedResult extends React.Component {
@@ -47,16 +49,15 @@ export default class SavedResult extends React.Component {
           });
           this.setState({ result: savedList });
         });
+    } else if (endpoint === 'playlist') {
+      // filler
     }
   }
-  // } else if (endpoint === 'playlist') {
 
-  // }
-
-  // handleCreatePlaylist(e) {
-  //   // console.log('clicked');
-  //   // this.setState({ createdPlaylist: true });
-  // }
+  handleCreatePlaylist(e) {
+    // console.log('clicked');
+    this.setState({ createdPlaylist: true });
+  }
 
   render() {
     const { handleCreatePlaylist } = this;
@@ -89,7 +90,30 @@ export default class SavedResult extends React.Component {
           </div>
         }
         {createdPlaylist &&
-          <div className="modal-backdrop position-absolute vh-100" />
+          <div className="modal-background fixed-top vh-100">
+            <div className="modal-container p-3">
+              <div className="header">
+                <h4>New Playlist</h4>
+              </div>
+              <Form>
+                <div className="row">
+                  <div className="col">
+                    <input
+                      type="text"
+                      name="search"
+                      placeholder="PLAYLIST NAME"
+                      className="form-control search-bar text-muted my-3" />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col d-flex justify-content-between">
+                    <Button type="button" className="btn-secondary">Close</Button>
+                    <Button type="submit" className="btn-main">Save Changes</Button>
+                  </div>
+                </div>
+              </Form>
+            </div>
+          </div>
         }
         <div />
       </>
