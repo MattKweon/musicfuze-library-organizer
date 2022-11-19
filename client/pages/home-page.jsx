@@ -30,7 +30,7 @@ export default class Home extends React.Component {
 
   render() {
     const { handleCategoryClick } = this;
-    const { user } = this.context;
+    const { user, route } = this.context;
     const { content } = this.state;
 
     if (!user) return <Redirect to="sign-in" />;
@@ -40,6 +40,8 @@ export default class Home extends React.Component {
       pageHeader = 'Library';
     } else if (content === 'songs') {
       pageHeader = 'Songs';
+    } else if (content === 'playlists') {
+      pageHeader = 'Playlists';
     }
 
     return (
@@ -52,9 +54,25 @@ export default class Home extends React.Component {
           : <div className="pb-4" />
         }
         <h1 className="fw-bolder">{pageHeader}</h1>
-        {content === 'songs'
-          ? <SavedResult libCategory={content} />
+        {content
+          ? <SavedResult libCategory={route.params} />
           : <div className="container" onClick={handleCategoryClick}>
+            <div data-category="playlists" className="row clickable-row">
+              <div className="col-1 p-0">
+                <span className="material-symbols-outlined color-icons display-1">
+                  queue_music
+                </span>
+              </div>
+              <div className="col-10 p-0">
+                <span>Playlist</span>
+              </div>
+              <div className="col-1">
+                <span className="material-symbols-outlined color-icons">
+                  chevron_right
+                </span>
+              </div>
+            </div>
+            <hr className="style1" />
             <div data-category="songs" className="row clickable-row">
               <div className="col-1 p-0">
                 <span className="material-symbols-outlined color-icons">
