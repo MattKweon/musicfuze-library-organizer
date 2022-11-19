@@ -175,9 +175,14 @@ app.get('/api/user/library/songs', (req, res, next) => {
 app.get('/api/user/library/playlists', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-        select "playlistId", "name"
-        from "playlist"
-        where "userId" = '${userId}'
+        select "a"."username",
+               "p"."playlistId",
+               "p"."name" as "playlistName",
+               "pt"."trackId"
+          from "accounts" as "a"
+          join "playlist" as "p" using ("userId")
+          join "playlistTracks" as "pt" using ("playlistId")
+          where "userId" = '${userId}'
       `;
   db.query(sql)
     .then(result => {
@@ -234,3 +239,6 @@ app.use(errorMiddleware);
 app.listen(process.env.PORT, () => {
   process.stdout.write(`\n\napp listening on port ${process.env.PORT}\n\n`);
 });
+
+// user-token:
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYW5vbnltb3VzIiwiaWF0IjoxNjY4ODIyNjg0fQ.eHNnl1BXw7dbQPjvELnhpHhKWR1fUHdNfdc_zfZq68s

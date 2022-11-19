@@ -8,13 +8,16 @@ export default class SavedResult extends React.Component {
     super(props);
     this.state = {
       result: null,
-      playlistName: ''
+      playlistName: '',
+      showPlaylist: null
+
     };
 
     this.handleCreatePlaylist = this.handleCreatePlaylist.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
+    this.handleClickPlaylist = this.handleClickPlaylist.bind(this);
   }
 
   componentDidMount() {
@@ -67,74 +70,64 @@ export default class SavedResult extends React.Component {
       });
   }
 
-  render() {
-    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm } = this;
-    const { result, createPlaylist } = this.state;
-    const endpoint = this.props.libCategory.get('libCategory');
-
-    if (result === null) return null;
-
-    // eslint-disable-next-line array-callback-return
-    const savedList = result.map((item, index) => {
-      if (endpoint === 'songs') {
-        return (
-          <div key={item.id} data-id={index} className="row margin-neg">
-            <div className="col-2 col-md-1 p-0">
-              <div className="img-album my-1">
-                <img
-                  src={item.albumCover}
-                  className="rounded img-fluid"
-                  alt={item.title} />
-              </div>
-            </div>
-            <div className="col-9 col-md-10 pt-3">
-              <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{item.title}</span>
-              <br />
-              <span className="text-muted">{item.artistName}</span>
-            </div>
-            <hr className="style1 w-100" />
-          </div>
-        );
-      } else if (endpoint === 'playlists') {
-        return (
-          <div
-            key={item.playlistId}
-            data-id={item.playlistId}
-            className="row align-items-center clickable-row" >
-            <div className="col-4 ps-0">
-              <div className="add-playlist-container d-flex">
-                <span className="material-symbols-outlined color-icons">queue_music</span>
-              </div>
-            </div>
-            <div className="col-7">
-              <span>{item.name}</span>
-            </div>
-            <div className="col-1">
-              <span className="material-symbols-outlined color-icons">
-                chevron_right
-              </span>
-            </div>
-            <hr className="style1 w-100 mt-1" />
-          </div>
-        );
+  handleClickPlaylist(e) {
+    const playlistId = e.target.closest('[data-id]').getAttribute('data-id');
+    const token = window.localStorage.getItem('user-jwt');
+    const options = {
+      headers: {
+        'X-Access-Token': token
       }
-    });
+    };
+    fetch('/api/user/library/playlists', options)
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ showPlaylist: result[playlistId] });
+      });
 
-    return (
-      <>
-        {result && endpoint === 'songs' &&
-          <div className="container">{savedList}</div>
-        }
-        {endpoint === 'playlists' &&
-          <div className="container" onClick={handleCreatePlaylist}>
-            <div className="row align-items-center clickable-row">
+  }
+
+  render() {
+    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist } = this;
+    const { result, createPlaylist, showPlaylist } = this.state;
+    const endpoint = this.props.libCategory.get('libCategory');
+    let savedList;
+    let playlistDetails;
+
+    if (result) {
+      // eslint-disable-next-line array-callback-return
+      savedList = result.map((item, index) => {
+        if (endpoint === 'songs') {
+          return (
+            <div key={item.id} data-id={index} className="row margin-neg">
+              <div className="col-2 col-md-1 p-0">
+                <div className="img-album my-1">
+                  <img
+                    src={item.albumCover}
+                    className="rounded img-fluid"
+                    alt={item.title} />
+                </div>
+              </div>
+              <div className="col-9 col-md-10 pt-3">
+                <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{item.title}</span>
+                <br />
+                <span className="text-muted">{item.artistName}</span>
+              </div>
+              <hr className="style1 w-100" />
+            </div>
+          );
+        } else if (endpoint === 'playlists') {
+          return (
+            <div
+              key={item.playlistId}
+              data-id={index}
+              className="row align-items-center clickable-row" >
               <div className="col-4 ps-0">
                 <div className="add-playlist-container d-flex">
-                  <span className="material-symbols-outlined color-icons">add</span>
+                  <span className="material-symbols-outlined color-icons">queue_music</span>
                 </div>
               </div>
               <div className="col-7">
-                <span>New Playlist...</span>
+                <span>{item.playlistName}</span>
               </div>
               <div className="col-1">
                 <span className="material-symbols-outlined color-icons">
@@ -143,8 +136,71 @@ export default class SavedResult extends React.Component {
               </div>
               <hr className="style1 w-100 mt-1" />
             </div>
-            <div>{savedList}</div>
-          </div>
+          );
+        }
+      });
+    }
+    if (showPlaylist) {
+      playlistDetails = showPlaylist => {
+        return (
+          <>
+            <div className="row">
+              <div className="col">
+                <div className="showPlaylist-img">
+                  <div />
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <div className="row">
+                  <h5>{showPlaylist.playlistName}</h5>
+                </div>
+                <div className="row">
+                  <span className="color-main">{showPlaylist.username}</span>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <Button type="button" className="btn-alt">Add Music</Button>
+              </div>
+            </div>
+          </>
+        );
+      };
+    }
+
+    return (
+      <>
+        {result && endpoint === 'songs' &&
+          <div className="container">{savedList}</div>
+        }
+        {endpoint === 'playlists' && showPlaylist === null
+          ? <>
+            <div className="container" onClick={handleCreatePlaylist}>
+              <div className="row align-items-center clickable-row">
+                <div className="col-4 ps-0">
+                  <div className="add-playlist-container d-flex">
+                    <span className="material-symbols-outlined color-icons">add</span>
+                  </div>
+                </div>
+                <div className="col-7">
+                  <span>New Playlist...</span>
+                </div>
+                <div className="col-1">
+                  <span className="material-symbols-outlined color-icons">
+                    chevron_right
+                  </span>
+                </div>
+                <hr className="style1 w-100 mt-1" />
+              </div>
+            </div>
+            <div className="container" onClick={handleClickPlaylist}>
+              <div>{savedList}</div>
+            </div>
+          </>
+          : <div className="container">{playlistDetails}</div>
         }
         {createPlaylist &&
           <div className="modal-background fixed-top vh-100">

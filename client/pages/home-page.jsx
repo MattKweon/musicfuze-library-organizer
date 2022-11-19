@@ -71,8 +71,8 @@ export default class Home extends React.Component {
                   chevron_right
                 </span>
               </div>
+              <hr className="style1" />
             </div>
-            <hr className="style1" />
             <div data-category="songs" className="row clickable-row">
               <div className="col-1 p-0">
                 <span className="material-symbols-outlined color-icons">
@@ -87,8 +87,8 @@ export default class Home extends React.Component {
                   chevron_right
                 </span>
               </div>
+              <hr className="style1" />
             </div>
-            <hr className="style1" />
           </div>
         }
       </>

@@ -7,7 +7,7 @@ export default class SearchResult extends React.Component {
     this.state = { addedToLibrary: false };
 
     this.startTimer = this.startTimer.bind(this);
-    this.handleAddToLibary = this.handleAddToLibary.bind(this);
+    this.handleAddToLibrary = this.handleAddToLibrary.bind(this);
   }
 
   startTimer() {
@@ -16,7 +16,7 @@ export default class SearchResult extends React.Component {
     }, 1000);
   }
 
-  handleAddToLibary(e) {
+  handleAddToLibrary(e) {
     e.preventDefault();
     const saveId = e.target.closest('[data-id]').getAttribute('data-id');
     const { id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover } = this.props.result[saveId];
@@ -42,7 +42,7 @@ export default class SearchResult extends React.Component {
   render() {
     const { addedToLibrary } = this.state;
     const { result, filterType } = this.props;
-    const { handleAddToLibary } = this;
+    const { handleAddToLibrary } = this;
     // eslint-disable-next-line array-callback-return
     const resultList = result.map((item, index) => {
       if (filterType === 'track') {
@@ -68,7 +68,7 @@ export default class SearchResult extends React.Component {
                 more_horiz
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={handleAddToLibary}>Add to Library</Dropdown.Item>
+                <Dropdown.Item onClick={handleAddToLibrary}>Add to Library</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
             <hr className="style1 w-100" />
