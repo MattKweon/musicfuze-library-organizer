@@ -111,7 +111,7 @@ export default class SavedResult extends React.Component {
         const savedPlaylist = result.map((item, index) => {
           return (
             <div key={index} className="row align-items-center clickable-row">
-              <div className="col-4">
+              <div className="col-4 ps-0">
                 <div className="add-playlist-container d-flex">
                   <span className="material-symbols-outlined color-icons">queue_music</span>
                 </div>
