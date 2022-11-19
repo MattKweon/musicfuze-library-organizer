@@ -13,7 +13,7 @@ export default class SearchResult extends React.Component {
   startTimer() {
     setTimeout(() => {
       this.setState({ addedToLibrary: false });
-    }, 2000);
+    }, 1000);
   }
 
   handleAddToLibary(e) {
