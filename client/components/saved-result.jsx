@@ -28,52 +28,7 @@ export default class SavedResult extends React.Component {
     fetch(`/api/user/library/${endpoint}`, options)
       .then(res => res.json())
       .then(result => {
-        // eslint-disable-next-line array-callback-return
-        const savedList = result.map((item, index) => {
-          if (endpoint === 'songs') {
-            return (
-              <div key={item.id} data-id={index} className="row margin-neg">
-                <div className="col-2 col-md-1 p-0">
-                  <div className="img-album my-1">
-                    <img
-                      src={item.albumCover}
-                      className="rounded img-fluid"
-                      alt={item.title} />
-                  </div>
-                </div>
-                <div className="col-9 col-md-10 pt-3">
-                  <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{item.title}</span>
-                  <br />
-                  <span className="text-muted">{item.artistName}</span>
-                </div>
-                <hr className="style1 w-100" />
-              </div>
-            );
-          } else if (endpoint === 'playlists') {
-            return (
-              <div
-                key={item.playlistId}
-                data-id={item.playlistId}
-                className="row align-items-center clickable-row" >
-                <div className="col-4 ps-0">
-                  <div className="add-playlist-container d-flex">
-                    <span className="material-symbols-outlined color-icons">queue_music</span>
-                  </div>
-                </div>
-                <div className="col-7">
-                  <span>{item.name}</span>
-                </div>
-                <div className="col-1">
-                  <span className="material-symbols-outlined color-icons">
-                    chevron_right
-                  </span>
-                </div>
-                <hr className="style1 w-100 mt-1" />
-              </div>
-            );
-          }
-        });
-        this.setState({ result: savedList });
+        this.setState({ result });
       });
   }
 
@@ -108,30 +63,7 @@ export default class SavedResult extends React.Component {
     fetch('/api/create/playlist', options)
       .then(res => res.json())
       .then(result => {
-        const savedPlaylist = result.map((item, index) => {
-          return (
-            <div key={index} className="row align-items-center clickable-row">
-              <div className="col-4 ps-0">
-                <div className="add-playlist-container d-flex">
-                  <span className="material-symbols-outlined color-icons">queue_music</span>
-                </div>
-              </div>
-              <div className="col-7">
-                <span>{item.name}</span>
-              </div>
-              <div className="col-1">
-                <span className="material-symbols-outlined color-icons">
-                  chevron_right
-                </span>
-              </div>
-              <hr className="style1 w-100 mt-1" />
-            </div>
-          );
-        });
-        this.setState({
-          result: savedPlaylist,
-          createPlaylist: false
-        });
+        this.setState({ result, createPlaylist: false });
       });
   }
 
@@ -140,10 +72,56 @@ export default class SavedResult extends React.Component {
     const { result, createPlaylist } = this.state;
     const endpoint = this.props.libCategory.get('libCategory');
 
+    // eslint-disable-next-line array-callback-return
+    const savedList = result.map((item, index) => {
+      if (endpoint === 'songs') {
+        return (
+          <div key={item.id} data-id={index} className="row margin-neg">
+            <div className="col-2 col-md-1 p-0">
+              <div className="img-album my-1">
+                <img
+                  src={item.albumCover}
+                  className="rounded img-fluid"
+                  alt={item.title} />
+              </div>
+            </div>
+            <div className="col-9 col-md-10 pt-3">
+              <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{item.title}</span>
+              <br />
+              <span className="text-muted">{item.artistName}</span>
+            </div>
+            <hr className="style1 w-100" />
+          </div>
+        );
+      } else if (endpoint === 'playlists') {
+        return (
+          <div
+            key={item.playlistId}
+            data-id={item.playlistId}
+            className="row align-items-center clickable-row" >
+            <div className="col-4 ps-0">
+              <div className="add-playlist-container d-flex">
+                <span className="material-symbols-outlined color-icons">queue_music</span>
+              </div>
+            </div>
+            <div className="col-7">
+              <span>{item.name}</span>
+            </div>
+            <div className="col-1">
+              <span className="material-symbols-outlined color-icons">
+                chevron_right
+              </span>
+            </div>
+            <hr className="style1 w-100 mt-1" />
+          </div>
+        );
+      }
+    });
+
     return (
       <>
         {result && endpoint === 'songs' &&
-          <div className="container">{result}</div>
+          <div className="container">{savedList}</div>
         }
         {endpoint === 'playlists' &&
           <div className="container" onClick={handleCreatePlaylist}>
@@ -163,7 +141,7 @@ export default class SavedResult extends React.Component {
               </div>
               <hr className="style1 w-100 mt-1" />
             </div>
-            <div>{result}</div>
+            <div>{savedList}</div>
           </div>
         }
         {createPlaylist &&

@@ -101,7 +101,7 @@ app.get('/api/search/:endpoint', (req, res, next) => {
         const trackList = data.map(
           ({ id, title, artist: { id: artistId, name: artistName, picture: artistPicture }, album: { id: albumId, title: albumTitle, cover: albumCover } }) => ({ id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover })
         );
-        res.status(201).json(trackList);
+        res.status(200).json(trackList);
       }
     });
 });
@@ -191,7 +191,7 @@ app.get('/api/user/library/songs', (req, res, next) => {
   db.query(sql)
     .then(result => {
       const trackList = result.rows;
-      res.status(201).json(trackList);
+      res.status(200).json(trackList);
     })
     .catch(err => next(err));
 });
@@ -205,7 +205,7 @@ app.get('/api/user/library/playlists', (req, res, next) => {
       `;
   db.query(sql)
     .then(result => {
-      res.status(201).json(result.rows);
+      res.status(200).json(result.rows);
     })
     .catch(err => next(err));
 });
