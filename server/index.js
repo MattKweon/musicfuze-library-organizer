@@ -80,8 +80,10 @@ app.post('/api/auth/sign-in', (req, res, next) => {
           const payload = { userId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
           res.json({ token, user: payload });
-        });
-    });
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
 });
 
 app.get('/api/search/:endpoint', (req, res, next) => {
@@ -103,7 +105,8 @@ app.get('/api/search/:endpoint', (req, res, next) => {
         );
         res.status(200).json(trackList);
       }
-    });
+    })
+    .catch(err => next(err));
 });
 
 app.use(authorizationMiddleware);
@@ -147,33 +150,6 @@ app.post('/api/save/library', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/create/playlist', (req, res, next) => {
-  const { userId } = req.user;
-  const { playlistName } = req.body;
-  if (!playlistName) {
-    throw new ClientError(400, 'playlist name is required');
-  }
-  const sql = `
-    insert into "playlist" ("userId", "name")
-    values ($1, $2)
-  `;
-  const params = [userId, playlistName];
-  db.query(sql, params)
-    .then(result => {
-      const sql = `
-        select "playlistId", "name"
-        from "playlist"
-        where "userId" = '${userId}'
-      `;
-      db.query(sql)
-        .then(result => {
-          res.status(201).json(result.rows);
-        })
-        .catch(err => next(err));
-    })
-    .catch(err => next(err));
-});
-
 app.get('/api/user/library/songs', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
@@ -206,6 +182,49 @@ app.get('/api/user/library/playlists', (req, res, next) => {
   db.query(sql)
     .then(result => {
       res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/create/playlist', (req, res, next) => {
+  const { userId } = req.user;
+  const { playlistName } = req.body;
+  if (!playlistName) {
+    throw new ClientError(400, 'playlist name is required');
+  }
+  const sql = `
+    insert into "playlist" ("userId", "name")
+    values ($1, $2)
+  `;
+  const params = [userId, playlistName];
+  db.query(sql, params)
+    .then(result => {
+      const sql = `
+        select "playlistId", "name"
+        from "playlist"
+        where "userId" = '${userId}'
+      `;
+      db.query(sql)
+        .then(result => {
+          res.status(201).json(result.rows);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/save/library/playlist', (req, res, next) => {
+  const { playlistId, trackId } = req.body;
+  const sql = `
+    insert into "playlistTracks" ("playlistId", "trackId")
+    values ($1, $2)
+    returning "trackId"
+  `;
+  const params = [playlistId, trackId];
+  db.query(sql, params)
+    .then(result => {
+      const [trackId] = result.rows;
+      res.status(201).json(trackId);
     })
     .catch(err => next(err));
 });

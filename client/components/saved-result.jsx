@@ -72,6 +72,8 @@ export default class SavedResult extends React.Component {
     const { result, createPlaylist } = this.state;
     const endpoint = this.props.libCategory.get('libCategory');
 
+    if (result === null) return null;
+
     // eslint-disable-next-line array-callback-return
     const savedList = result.map((item, index) => {
       if (endpoint === 'songs') {
