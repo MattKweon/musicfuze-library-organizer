@@ -40,6 +40,8 @@ export default class Home extends React.Component {
       pageHeader = 'Library';
     } else if (content === 'songs') {
       pageHeader = 'Songs';
+    } else if (content === 'playlists') {
+      pageHeader = 'Playlists';
     }
 
     return (
@@ -55,7 +57,7 @@ export default class Home extends React.Component {
         {content
           ? <SavedResult libCategory={route.params} />
           : <div className="container" onClick={handleCategoryClick}>
-            <div data-category="playlist" className="row clickable-row">
+            <div data-category="playlists" className="row clickable-row">
               <div className="col-1 p-0">
                 <span className="material-symbols-outlined color-icons display-1">
                   queue_music
