@@ -89,22 +89,20 @@ app.post('/api/auth/sign-in', (req, res, next) => {
 app.get('/api/search/:endpoint', (req, res, next) => {
   const { endpoint } = req.params;
   const { q } = req.query;
+  let resultList;
   fetch(`https://api.deezer.com/search/${endpoint}?q=${q}`)
     .then(res => res.json())
     .then(result => {
       const data = result.data;
       if (endpoint === 'artist') {
-        const artistList = data.map(({ id: artistId, name: artistName, picture: artistPicture }) => ({ artistId, artistName, artistPicture }));
-        res.status(201).json(artistList);
+        resultList = data.map(({ id: artistId, name: artistName, picture: artistPicture }) => ({ artistId, artistName, artistPicture }));
       } else if (endpoint === 'album') {
-        const albumList = data.map(({ id: albumId, title: albumTitle, cover: albumCover, artist: { name: artistName } }) => ({ albumId, albumTitle, albumCover, artistName }));
-        res.status(201).json(albumList);
+        resultList = data.map(({ id: albumId, title: albumTitle, cover: albumCover, artist: { name: artistName } }) => ({ albumId, albumTitle, albumCover, artistName }));
       } else if (endpoint === 'track') {
-        const trackList = data.map(
-          ({ id, title, artist: { id: artistId, name: artistName, picture: artistPicture }, album: { id: albumId, title: albumTitle, cover: albumCover } }) => ({ id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover })
-        );
-        res.status(200).json(trackList);
+        resultList = data.map(
+          ({ id, title, artist: { id: artistId, name: artistName, picture: artistPicture }, album: { id: albumId, title: albumTitle, cover: albumCover } }) => ({ id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover }));
       }
+      res.status(200).json(resultList);
     })
     .catch(err => next(err));
 });
