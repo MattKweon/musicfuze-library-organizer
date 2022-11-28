@@ -77,7 +77,7 @@ export default class SearchResult extends React.Component {
       } else if (filterType === 'artist') {
         return (
           <div key={index} className="row margin-neg">
-            <div className="col-2 ps-0">
+            <div className="col-2 col-md-1 ps-0">
               <div className="img-album my-1">
                 <img
                   src={item.artistPicture}
@@ -85,7 +85,7 @@ export default class SearchResult extends React.Component {
                   alt={item.artistName} />
               </div>
             </div>
-            <div className="col-10 pt-4">
+            <div className="col-9 col-md-10 pt-3">
               <span className="text-truncate">{item.artistName}</span>
             </div>
             <hr className="style1" />
@@ -94,7 +94,7 @@ export default class SearchResult extends React.Component {
       } else if (filterType === 'album') {
         return (
           <div key={index} className="row margin-neg">
-            <div className="col-2 ps-0">
+            <div className="col-2 col-md-1 ps-0">
               <div className="img-album my-1">
                 <img
                   src={item.albumCover}
@@ -102,7 +102,7 @@ export default class SearchResult extends React.Component {
                   alt={item.albumTitle} />
               </div>
             </div>
-            <div className="col-10 pt-3">
+            <div className="col-0 col-md-10 pt-3">
               <span className="text-truncate">{item.albumTitle}</span>
               <br />
               <span className="text-muted">{item.artistName}</span>
