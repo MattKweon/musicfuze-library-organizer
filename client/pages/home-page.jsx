@@ -56,7 +56,7 @@ export default class Home extends React.Component {
         <h1 className="fw-bolder">{pageHeader}</h1>
         {content
           ? <SavedResult libCategory={route.params} />
-          : <div className="container" onClick={handleCategoryClick}>
+          : <div role="button" className="container" onClick={handleCategoryClick}>
             <div data-category="playlists" className="row clickable-row">
               <div className="col-1 p-0">
                 <span className="material-symbols-outlined color-icons display-1">
