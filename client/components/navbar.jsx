@@ -5,7 +5,7 @@ export default class Navbar extends React.Component {
   render() {
     const { user, route } = this.context;
     const justifyContent = user
-      ? 'container justify-content-start'
+      ? 'justify-content-start'
       : '';
     const underlineHome = route.path !== ''
       ? 'text-decoration-none'
