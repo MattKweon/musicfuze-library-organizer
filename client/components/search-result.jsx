@@ -51,9 +51,9 @@ export default class SearchResult extends React.Component {
             <div className="col-2 col-md-1 ps-0">
               <div className="img-album my-1">
                 <img
-                  src={item.albumCover}
-                  className="rounded img-fluid"
-                  alt={item.title} />
+                    src={item.albumCover}
+                    className="rounded img-fluid"
+                    alt={item.title} />
               </div>
             </div>
             <div className="col-9 col-md-10 pt-3">
@@ -63,8 +63,8 @@ export default class SearchResult extends React.Component {
             </div>
             <Dropdown className="col-1">
               <Dropdown.Toggle
-                className="material-symbols-outlined dropdown-btn pt-4 ps-3"
-                id="dropdown-basic" >
+                  className="material-symbols-outlined dropdown-btn pt-4 ps-3"
+                  id="dropdown-basic" >
                 more_horiz
               </Dropdown.Toggle>
               <Dropdown.Menu>
@@ -80,9 +80,9 @@ export default class SearchResult extends React.Component {
             <div className="col-2 col-md-1 ps-0">
               <div className="img-album my-1">
                 <img
-                  src={item.artistPicture}
-                  className="img-fluid img-artist"
-                  alt={item.artistName} />
+                    src={item.artistPicture}
+                    className="img-fluid img-artist"
+                    alt={item.artistName} />
               </div>
             </div>
             <div className="col-9 col-md-10 pt-3">
@@ -97,9 +97,9 @@ export default class SearchResult extends React.Component {
             <div className="col-2 col-md-1 ps-0">
               <div className="img-album my-1">
                 <img
-                  src={item.albumCover}
-                  className="rounded img-fluid"
-                  alt={item.albumTitle} />
+                    src={item.albumCover}
+                    className="rounded img-fluid"
+                    alt={item.albumTitle} />
               </div>
             </div>
             <div className="col-0 col-md-10 pt-3">
@@ -112,6 +112,7 @@ export default class SearchResult extends React.Component {
         );
       }
     });
+
     return (
       <>
         <div className="container">{resultList}</div>

@@ -103,7 +103,8 @@ app.get('/api/search/:endpoint', (req, res, next) => {
         );
         res.status(200).json(trackList);
       }
-    });
+    })
+    .catch(err => next(err));
 });
 
 app.use(authorizationMiddleware);
