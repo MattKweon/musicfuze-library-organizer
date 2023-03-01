@@ -9,8 +9,7 @@ export default class SavedResult extends React.Component {
     this.state = {
       result: null,
       playlistName: '',
-      showPlaylist: null
-
+      showPlaylistDetails: null
     };
 
     this.handleCreatePlaylist = this.handleCreatePlaylist.bind(this);
@@ -71,24 +70,29 @@ export default class SavedResult extends React.Component {
   }
 
   handleClickPlaylist(e) {
-    const playlistId = e.target.closest('[data-id]').getAttribute('data-id');
+    const id = e.target.closest('[data-id]').getAttribute('data-id');
     const token = window.localStorage.getItem('user-jwt');
+    let newHash = window.location.hash;
+    newHash += `&playlistId=${id}`;
+    window.location.hash = newHash;
     const options = {
       headers: {
         'X-Access-Token': token
       }
     };
-    fetch('/api/user/library/playlists', options)
+    fetch(`/api/user/library/playlists/${id}`, options)
       .then(res => res.json())
       .then(result => {
-        this.setState({ showPlaylist: result[playlistId] });
+        this.setState({
+          result: null,
+          showPlaylistDetails: result
+        });
       });
-
   }
 
   render() {
     const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist } = this;
-    const { result, createPlaylist, showPlaylist } = this.state;
+    const { result, createPlaylist, showPlaylistDetails } = this.state;
     const endpoint = this.props.libCategory.get('libCategory');
     let savedList;
     let playlistDetails;
@@ -119,7 +123,7 @@ export default class SavedResult extends React.Component {
           return (
             <div
               key={item.playlistId}
-              data-id={index}
+              data-id={item.playlistId}
               className="row align-items-center clickable-row" >
               <div className="col-4 ps-0">
                 <div className="add-playlist-container d-flex">
@@ -140,35 +144,34 @@ export default class SavedResult extends React.Component {
         }
       });
     }
-    if (showPlaylist) {
-      playlistDetails = showPlaylist => {
-        return (
-          <>
-            <div className="row">
-              <div className="col">
-                <div className="showPlaylist-img">
-                  <div />
-                </div>
+    if (showPlaylistDetails) {
+      const info = showPlaylistDetails[0];
+      playlistDetails = (
+        <>
+          <div className="row">
+            <div className="col">
+              <div className="showPlaylist-img">
+                <div />
               </div>
             </div>
-            <div className="row">
-              <div className="col">
-                <div className="row">
-                  <h5>{showPlaylist.playlistName}</h5>
-                </div>
-                <div className="row">
-                  <span className="color-main">{showPlaylist.username}</span>
-                </div>
+          </div>
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <h5>{info.playlistName}</h5>
+              </div>
+              <div className="row">
+                <span className="color-main">{info.username}</span>
               </div>
             </div>
-            <div className="row">
-              <div className="col">
-                <Button type="button" className="btn-alt">Add Music</Button>
-              </div>
+          </div>
+          <div className="row">
+            <div className="col">
+              <Button type="button" className="btn-alt">Add Music</Button>
             </div>
-          </>
-        );
-      };
+          </div>
+        </>
+      );
     }
 
     return (
@@ -176,7 +179,7 @@ export default class SavedResult extends React.Component {
         {result && endpoint === 'songs' &&
           <div className="container">{savedList}</div>
         }
-        {endpoint === 'playlists' && showPlaylist === null
+        {endpoint === 'playlists' && showPlaylistDetails === null
           ? <>
             <div className="container" onClick={handleCreatePlaylist}>
               <div className="row align-items-center clickable-row">

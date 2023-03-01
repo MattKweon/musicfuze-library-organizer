@@ -173,18 +173,31 @@ app.get('/api/user/library/songs', (req, res, next) => {
 app.get('/api/user/library/playlists', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-        select "a"."username",
-               "p"."playlistId",
-               "p"."name" as "playlistName",
-               "pt"."trackId"
-          from "accounts" as "a"
-          join "playlist" as "p" using ("userId")
-          join "playlistTracks" as "pt" using ("playlistId")
+        select "playlistId",
+               "name" as "playlistName"
+          from "playlist"
           where "userId" = '${userId}'
       `;
   db.query(sql)
     .then(result => {
       res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/user/library/playlists/:id', (req, res, next) => {
+  const { id } = req.params;
+  const sql = `
+    select "p"."name" as "playlistName",
+           "a"."username"
+       from "playlist" as "p"
+       join "accounts" as "a" using ("userId")
+      where "p"."playlistId" = '${id}'
+  `;
+  db.query(sql)
+    .then(result => {
+      const playlistDetails = result.rows;
+      res.status(200).json(playlistDetails);
     })
     .catch(err => next(err));
 });
@@ -203,7 +216,8 @@ app.post('/api/create/playlist', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       const sql = `
-        select "playlistId", "name"
+        select "playlistId",
+               "name" as "playlistName"
         from "playlist"
         where "userId" = '${userId}'
       `;
@@ -239,4 +253,4 @@ app.listen(process.env.PORT, () => {
 });
 
 // user-token:
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYW5vbnltb3VzIiwiaWF0IjoxNjY4ODIyNjg0fQ.eHNnl1BXw7dbQPjvELnhpHhKWR1fUHdNfdc_zfZq68s
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzZXJuYW1lIjoibGZ6ZGVtbyIsImlhdCI6MTY2OTkzODg0OH0.Ed2CMghDjcHeciPsXTn9v1Cunz0XmqXMgYY0pGysnOg
