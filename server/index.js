@@ -197,7 +197,23 @@ app.get('/api/user/library/playlists/:id', (req, res, next) => {
   db.query(sql)
     .then(result => {
       const playlistDetails = result.rows;
-      res.status(200).json(playlistDetails);
+      const sql = `
+        select "pt"."trackId" as "id",
+               "t"."title",
+               "art"."name" as "artistName",
+               "alb"."coverUrl" as "albumCover"
+          from "playlistTracks" as "pt"
+          join "tracks" as "t" using ("trackId")
+          join "artists" as "art" using ("artistId")
+          join "albums" as "alb" using ("albumId")
+         where "playlistId" = '${id}'
+      `;
+      db.query(sql)
+        .then(result => {
+          const playlistTracks = result.rows;
+          res.status(200).json([playlistDetails, playlistTracks]);
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 });

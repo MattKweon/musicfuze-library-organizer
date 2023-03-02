@@ -145,31 +145,54 @@ export default class SavedResult extends React.Component {
       });
     }
     if (showPlaylistDetails) {
-      const info = showPlaylistDetails[0];
+      const info = showPlaylistDetails[0][0];
+      const tracks = showPlaylistDetails[1][0];
       playlistDetails = (
         <>
-          <div className="row">
-            <div className="col">
-              <div className="showPlaylist-img">
-                <div />
+          <div className="container">
+            <div className="row">
+              <div className="col d-flex justify-content-center">
+                <div className="playlist-img-placeholder" />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <div className="row">
+                  <div className="col d-flex justify-content-center">
+                    <h5>{info.playlistName}</h5>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col d-flex justify-content-center">
+                    <span className="color-main">{info.username}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col d-flex justify-content-center">
+                <Button type="button" className="btn-alt">Add Music</Button>
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col">
-              <div className="row">
-                <h5>{info.playlistName}</h5>
+          {tracks &&
+            <div key={tracks.id} data-id={tracks.id} className="row margin-neg">
+              <div className="col-2 col-md-1 p-0">
+                <div className="img-album my-1">
+                  <img
+                    src={tracks.albumCover}
+                    className="rounded img-fluid"
+                    alt={tracks.title} />
+                </div>
               </div>
-              <div className="row">
-                <span className="color-main">{info.username}</span>
+              <div className="col-9 col-md-10 pt-3">
+                <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{tracks.title}</span>
+                <br />
+                <span className="text-muted">{tracks.artistName}</span>
               </div>
+              <hr className="style1 w-100" />
             </div>
-          </div>
-          <div className="row">
-            <div className="col">
-              <Button type="button" className="btn-alt">Add Music</Button>
-            </div>
-          </div>
+          }
         </>
       );
     }

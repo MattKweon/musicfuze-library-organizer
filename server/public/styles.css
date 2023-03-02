@@ -75,6 +75,14 @@
   width: 7rem;
 }
 
+.playlist-img-placeholder {
+  background-color: #000;
+  opacity: 20%;
+  border-radius: 5px;
+  height: 10rem;
+  width: 10rem;
+}
+
 .modal-background {
   background-color: rgb(0, 0, 0, 0.6);
 }
