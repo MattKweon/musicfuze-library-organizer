@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
 import AppContext from '../lib/app-context';
 
 export default class SavedResult extends React.Component {
@@ -9,13 +10,15 @@ export default class SavedResult extends React.Component {
     this.state = {
       result: null,
       playlistName: '',
-      showPlaylistDetails: null
+      showPlaylistDetails: null,
+      choosePlaylist: null
     };
 
     this.handleCreatePlaylist = this.handleCreatePlaylist.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
+    this.handleChoosePlaylist = this.handleChoosePlaylist.bind(this);
     this.handleClickPlaylist = this.handleClickPlaylist.bind(this);
   }
 
@@ -90,9 +93,13 @@ export default class SavedResult extends React.Component {
       });
   }
 
+  handleChoosePlaylist(e) {
+    this.setState({ choosePlaylist: true });
+  }
+
   render() {
-    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist } = this;
-    const { result, createPlaylist, showPlaylistDetails } = this.state;
+    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleChoosePlaylist } = this;
+    const { result, createPlaylist, showPlaylistDetails, choosePlaylist } = this.state;
     const endpoint = this.props.libCategory.get('libCategory');
     let savedList;
     let playlistDetails;
@@ -116,8 +123,18 @@ export default class SavedResult extends React.Component {
                 <br />
                 <span className="text-muted">{item.artistName}</span>
               </div>
+              <Dropdown className="col-1">
+                <Dropdown.Toggle
+                className="material-symbols-outlined dropdown-btn pt-4 ps-3"
+                id="dropdown-basic" >
+                  more_horiz
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={handleChoosePlaylist}>Add to Playlist</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
               <hr className="style1 w-100" />
-            </div>
+            </div >
           );
         } else if (endpoint === 'playlists') {
           return (
@@ -155,7 +172,7 @@ export default class SavedResult extends React.Component {
                 <div className="playlist-img-placeholder" />
               </div>
             </div>
-            <div className="row">
+            <div className="row my-3">
               <div className="col">
                 <div className="row">
                   <div className="col d-flex justify-content-center">
@@ -169,11 +186,11 @@ export default class SavedResult extends React.Component {
                 </div>
               </div>
             </div>
-            <div className="row">
+            {/* <div className="row mb-3">
               <div className="col d-flex justify-content-center">
                 <Button type="button" className="btn-alt">Add Music</Button>
               </div>
-            </div>
+            </div> */}
           </div>
           {tracks &&
             <div key={tracks.id} data-id={tracks.id} className="row margin-neg">
@@ -264,6 +281,16 @@ export default class SavedResult extends React.Component {
                   </div>
                 </div>
               </Form>
+            </div>
+          </div>
+        }
+        {choosePlaylist &&
+          <div className="modal-background fixed-top vh-100">
+            <div className="choose-playlist-container p-3">
+              <div className="header">
+                <h4>Select Playlist</h4>
+              </div>
+
             </div>
           </div>
         }

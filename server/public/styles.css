@@ -79,8 +79,8 @@
   background-color: #000;
   opacity: 20%;
   border-radius: 5px;
-  height: 10rem;
-  width: 10rem;
+  height: 12rem;
+  width: 12rem;
 }
 
 .modal-background {
@@ -94,6 +94,17 @@
   width: 18rem;
   position: fixed;
   top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.choose-playlist-container {
+  background-color: #ffff;
+  border-radius: 5px;
+  height: 70rem;
+  width: 99%;
+  position: fixed;
+  top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
