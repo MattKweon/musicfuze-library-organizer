@@ -198,7 +198,7 @@ export default class SavedResult extends React.Component {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={handleSongOptions}>Add to Playlist</Dropdown.Item>
-                  <Dropdown.Item onClick={handleDelete}>Remove...</Dropdown.Item>
+                  <Dropdown.Item onClick={handleDelete} className="text-danger">Remove...</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               <hr className="style1 w-100" />
@@ -371,24 +371,28 @@ export default class SavedResult extends React.Component {
         }
         {deleteFromLibrary &&
           <div className="modal-background fixed-top vh-100">
-            <div className="modal-container p-3">
-              <div className="header">
+            <div className="modal-container-delete p-3">
+              <div className="header text-center">
                 <h4>Remove from library</h4>
               </div>
-              <Button
-                name="close"
-                type="button"
-                className="btn-secondary"
-                onClick={handleCancelDelete} >
-                Cancel
-              </Button>
-              <Button
-                name="save"
-                type="submit"
-                className="btn-main"
-                onClick={handleConfirmDelete} >
-                Confirm
-              </Button>
+              <div className="row">
+                <div className="col d-flex justify-content-between">
+                  <Button
+                    name="close"
+                    type="button"
+                    className="btn-secondary"
+                    onClick={handleCancelDelete} >
+                    Cancel
+                  </Button>
+                  <Button
+                    name="save"
+                    type="submit"
+                    className="btn-main"
+                    onClick={handleConfirmDelete} >
+                    Confirm
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         }

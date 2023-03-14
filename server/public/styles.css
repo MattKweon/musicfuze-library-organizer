@@ -98,6 +98,17 @@
   transform: translate(-50%, -50%);
 }
 
+.modal-container-delete {
+  background-color: #ffff;
+  border-radius: 5px;
+  height: 6rem;
+  width: 18rem;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .choose-playlist-container {
   background-color: #ffff;
   border-radius: 5px;
