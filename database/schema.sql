@@ -71,6 +71,15 @@ CREATE TABLE "public"."playlist" (
 
 
 
+CREATE TABLE "public"."playlistTracks" (
+	"playlistId" int NOT NULL,
+	"trackId" int NOT NULL
+) WITH (
+  OIDS=FALSE
+);
+
+
+
 
 ALTER TABLE "tracks" ADD CONSTRAINT "tracks_fk0" FOREIGN KEY ("artistId") REFERENCES "artists"("artistId");
 ALTER TABLE "tracks" ADD CONSTRAINT "tracks_fk1" FOREIGN KEY ("albumId") REFERENCES "albums"("albumId");
@@ -81,3 +90,6 @@ ALTER TABLE "library" ADD CONSTRAINT "library_fk1" FOREIGN KEY ("trackId") REFER
 
 
 ALTER TABLE "playlist" ADD CONSTRAINT "playlist_fk0" FOREIGN KEY ("userId") REFERENCES "accounts"("userId");
+
+ALTER TABLE "playlistTracks" ADD CONSTRAINT "playlistTracks_fk0" FOREIGN KEY ("playlistId") REFERENCES "playlist"("playlistId");
+ALTER TABLE "playlistTracks" ADD CONSTRAINT "playlistTracks_fk1" FOREIGN KEY ("trackId") REFERENCES "tracks"("trackId");

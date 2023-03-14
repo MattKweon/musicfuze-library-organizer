@@ -24,7 +24,6 @@ export default class Discover extends React.Component {
     const q = params.get('q');
     const prevQ = prevProps.route.params.get('q');
     if (!q) {
-      // eslint-disable-next-line no-useless-return
       return null;
     } else if (prevQ !== q || prevEndpoint !== endpoint) {
       fetch(`/api/search/${endpoint}?q=${q}`)

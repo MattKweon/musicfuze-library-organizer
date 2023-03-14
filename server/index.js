@@ -80,7 +80,8 @@ app.post('/api/auth/sign-in', (req, res, next) => {
           const payload = { userId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
           res.json({ token, user: payload });
-        });
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 });
@@ -88,22 +89,20 @@ app.post('/api/auth/sign-in', (req, res, next) => {
 app.get('/api/search/:endpoint', (req, res, next) => {
   const { endpoint } = req.params;
   const { q } = req.query;
+  let resultList;
   fetch(`https://api.deezer.com/search/${endpoint}?q=${q}`)
     .then(res => res.json())
     .then(result => {
       const data = result.data;
       if (endpoint === 'artist') {
-        const artistList = data.map(({ id: artistId, name: artistName, picture: artistPicture }) => ({ artistId, artistName, artistPicture }));
-        res.status(201).json(artistList);
+        resultList = data.map(({ id: artistId, name: artistName, picture: artistPicture }) => ({ artistId, artistName, artistPicture }));
       } else if (endpoint === 'album') {
-        const albumList = data.map(({ id: albumId, title: albumTitle, cover: albumCover, artist: { name: artistName } }) => ({ albumId, albumTitle, albumCover, artistName }));
-        res.status(201).json(albumList);
+        resultList = data.map(({ id: albumId, title: albumTitle, cover: albumCover, artist: { name: artistName } }) => ({ albumId, albumTitle, albumCover, artistName }));
       } else if (endpoint === 'track') {
-        const trackList = data.map(
-          ({ id, title, artist: { id: artistId, name: artistName, picture: artistPicture }, album: { id: albumId, title: albumTitle, cover: albumCover } }) => ({ id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover })
-        );
-        res.status(200).json(trackList);
+        resultList = data.map(
+          ({ id, title, artist: { id: artistId, name: artistName, picture: artistPicture }, album: { id: albumId, title: albumTitle, cover: albumCover } }) => ({ id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover }));
       }
+      res.status(200).json(resultList);
     })
     .catch(err => next(err));
 });
@@ -149,33 +148,6 @@ app.post('/api/save/library', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/create/playlist', (req, res, next) => {
-  const { userId } = req.user;
-  const { playlistName } = req.body;
-  if (!playlistName) {
-    throw new ClientError(400, 'playlist name is required');
-  }
-  const sql = `
-    insert into "playlist" ("userId", "name")
-    values ($1, $2)
-  `;
-  const params = [userId, playlistName];
-  db.query(sql, params)
-    .then(result => {
-      const sql = `
-        select "playlistId", "name"
-        from "playlist"
-        where "userId" = '${userId}'
-      `;
-      db.query(sql)
-        .then(result => {
-          res.status(201).json(result.rows);
-        })
-        .catch(err => next(err));
-    })
-    .catch(err => next(err));
-});
-
 app.get('/api/user/library/songs', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
@@ -201,13 +173,91 @@ app.get('/api/user/library/songs', (req, res, next) => {
 app.get('/api/user/library/playlists', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-        select "playlistId", "name"
-        from "playlist"
-        where "userId" = '${userId}'
+        select "playlistId",
+               "name" as "playlistName"
+          from "playlist"
+          where "userId" = '${userId}'
       `;
   db.query(sql)
     .then(result => {
       res.status(200).json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+app.get('/api/user/library/playlists/:id', (req, res, next) => {
+  const { id } = req.params;
+  const sql = `
+    select "p"."name" as "playlistName",
+           "a"."username"
+       from "playlist" as "p"
+       join "accounts" as "a" using ("userId")
+      where "p"."playlistId" = '${id}'
+  `;
+  db.query(sql)
+    .then(result => {
+      const playlistDetails = result.rows;
+      const sql = `
+        select "pt"."trackId" as "id",
+               "t"."title",
+               "art"."name" as "artistName",
+               "alb"."coverUrl" as "albumCover"
+          from "playlistTracks" as "pt"
+          join "tracks" as "t" using ("trackId")
+          join "artists" as "art" using ("artistId")
+          join "albums" as "alb" using ("albumId")
+         where "playlistId" = '${id}'
+      `;
+      db.query(sql)
+        .then(result => {
+          const playlistTracks = result.rows;
+          res.status(200).json([playlistDetails, playlistTracks]);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/create/playlist', (req, res, next) => {
+  const { userId } = req.user;
+  const { playlistName } = req.body;
+  if (!playlistName) {
+    throw new ClientError(400, 'playlist name is required');
+  }
+  const sql = `
+    insert into "playlist" ("userId", "name")
+    values ($1, $2)
+  `;
+  const params = [userId, playlistName];
+  db.query(sql, params)
+    .then(result => {
+      const sql = `
+        select "playlistId",
+               "name" as "playlistName"
+        from "playlist"
+        where "userId" = '${userId}'
+      `;
+      db.query(sql)
+        .then(result => {
+          res.status(201).json(result.rows);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/save/library/playlist', (req, res, next) => {
+  const { playlistId, trackId } = req.body;
+  const sql = `
+    insert into "playlistTracks" ("playlistId", "trackId")
+    values ($1, $2)
+    returning "trackId"
+  `;
+  const params = [playlistId, trackId];
+  db.query(sql, params)
+    .then(result => {
+      const [trackId] = result.rows;
+      res.status(201).json(trackId);
     })
     .catch(err => next(err));
 });
@@ -217,3 +267,6 @@ app.use(errorMiddleware);
 app.listen(process.env.PORT, () => {
   process.stdout.write(`\n\napp listening on port ${process.env.PORT}\n\n`);
 });
+
+// user-token:
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzZXJuYW1lIjoibGZ6ZGVtbyIsImlhdCI6MTY2OTkzODg0OH0.Ed2CMghDjcHeciPsXTn9v1Cunz0XmqXMgYY0pGysnOg
