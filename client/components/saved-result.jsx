@@ -207,6 +207,7 @@ export default class SavedResult extends React.Component {
         } else if (endpoint === 'playlists' || choosePlaylist === true) {
           return (
             <div
+              role="button"
               key={item.playlistId}
               data-id={item.playlistId}
               className="row align-items-center clickable-row" >
@@ -293,7 +294,7 @@ export default class SavedResult extends React.Component {
         }
         {endpoint === 'playlists' && showPlaylistDetails === null
           ? <>
-            <div className="container" onClick={handleCreatePlaylist}>
+            <div role="button" className="container" onClick={handleCreatePlaylist}>
               <div className="row align-items-center clickable-row">
                 <div className="col-4 ps-0">
                   <div className="add-playlist-container d-flex">
