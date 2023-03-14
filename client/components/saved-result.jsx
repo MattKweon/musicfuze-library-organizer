@@ -165,6 +165,7 @@ export default class SavedResult extends React.Component {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={handleSongOptions}>Add to Playlist</Dropdown.Item>
+                  <Dropdown.Item>Remove...</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               <hr className="style1 w-100" />
