@@ -21,6 +21,8 @@ export default class SavedResult extends React.Component {
     this.handleSongOptions = this.handleSongOptions.bind(this);
     this.handleClickPlaylist = this.handleClickPlaylist.bind(this);
     this.addSongToPlaylist = this.addSongToPlaylist.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleCancelDelete = this.handleCancelDelete.bind(this);
   }
 
   componentDidMount() {
@@ -131,9 +133,17 @@ export default class SavedResult extends React.Component {
     this.componentDidMount();
   }
 
+  handleDelete() {
+    this.setState({ deleteModal: true });
+  }
+
+  handleCancelDelete() {
+    this.setState({ deleteModal: false });
+  }
+
   render() {
-    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleSongOptions, addSongToPlaylist } = this;
-    const { result, createPlaylist, showPlaylistDetails, choosePlaylist } = this.state;
+    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleSongOptions, addSongToPlaylist, handleDelete, handleCancelDelete } = this;
+    const { result, createPlaylist, showPlaylistDetails, choosePlaylist, deleteModal } = this.state;
     const endpoint = this.props.libCategory.get('libCategory');
     let savedList;
     let playlistDetails;
@@ -165,7 +175,7 @@ export default class SavedResult extends React.Component {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={handleSongOptions}>Add to Playlist</Dropdown.Item>
-                  <Dropdown.Item>Remove...</Dropdown.Item>
+                  <Dropdown.Item onClick={handleDelete}>Remove...</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               <hr className="style1 w-100" />
@@ -332,6 +342,28 @@ export default class SavedResult extends React.Component {
               <div className="container" onClick={addSongToPlaylist}>
                 <div>{savedList}</div>
               </div>
+            </div>
+          </div>
+        }
+        {deleteModal &&
+          <div className="modal-background fixed-top vh-100">
+            <div className="modal-container p-3">
+              <div className="header">
+                <h4>Remove from library</h4>
+              </div>
+              <Button
+                name="close"
+                type="button"
+                className="btn-secondary"
+                onClick={handleCancelDelete} >
+                Cancel
+              </Button>
+              <Button
+                name="save"
+                type="submit"
+                className="btn-main" >
+                Confirm
+              </Button>
             </div>
           </div>
         }
