@@ -18,8 +18,9 @@ export default class SavedResult extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
-    this.handleChoosePlaylist = this.handleChoosePlaylist.bind(this);
+    this.handleSongOptions = this.handleSongOptions.bind(this);
     this.handleClickPlaylist = this.handleClickPlaylist.bind(this);
+    this.addSongToPlaylist = this.addSongToPlaylist.bind(this);
   }
 
   componentDidMount() {
@@ -93,12 +94,45 @@ export default class SavedResult extends React.Component {
       });
   }
 
-  handleChoosePlaylist(e) {
-    this.setState({ choosePlaylist: true });
+  handleSongOptions(e) {
+    const saveId = e.target.closest('[data-id]').getAttribute('data-id');
+    const trackId = this.state.result[saveId].id;
+    const token = window.localStorage.getItem('user-jwt');
+    const options = {
+      headers: {
+        'X-Access-Token': token
+      }
+    };
+    fetch('/api/user/library/playlists', options)
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ result, trackId, choosePlaylist: true });
+      });
+  }
+
+  addSongToPlaylist(e) {
+    e.preventDefault();
+    const trackId = this.state.trackId;
+    const playlistId = e.target.closest('[data-id]').getAttribute('data-id');
+    const token = window.localStorage.getItem('user-jwt');
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': token
+      },
+      body: JSON.stringify({ playlistId, trackId })
+    };
+    fetch('/api/save/library/playlist', options)
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ choosePlaylist: false });
+      });
+    this.componentDidMount();
   }
 
   render() {
-    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleChoosePlaylist } = this;
+    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleSongOptions, addSongToPlaylist } = this;
     const { result, createPlaylist, showPlaylistDetails, choosePlaylist } = this.state;
     const endpoint = this.props.libCategory.get('libCategory');
     let savedList;
@@ -107,7 +141,7 @@ export default class SavedResult extends React.Component {
     if (result) {
       // eslint-disable-next-line array-callback-return
       savedList = result.map((item, index) => {
-        if (endpoint === 'songs') {
+        if (endpoint === 'songs' && choosePlaylist !== true) {
           return (
             <div key={item.id} data-id={index} className="row margin-neg">
               <div className="col-2 col-md-1 p-0">
@@ -130,13 +164,13 @@ export default class SavedResult extends React.Component {
                   more_horiz
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={handleChoosePlaylist}>Add to Playlist</Dropdown.Item>
+                  <Dropdown.Item onClick={handleSongOptions}>Add to Playlist</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               <hr className="style1 w-100" />
             </div >
           );
-        } else if (endpoint === 'playlists') {
+        } else if (endpoint === 'playlists' || choosePlaylist === true) {
           return (
             <div
               key={item.playlistId}
@@ -163,7 +197,27 @@ export default class SavedResult extends React.Component {
     }
     if (showPlaylistDetails) {
       const info = showPlaylistDetails[0][0];
-      const tracks = showPlaylistDetails[1][0];
+      const tracks = showPlaylistDetails[1];
+      savedList = tracks.map((item, index) => {
+        return (
+          <div key={item.id} data-id={index} className="row margin-neg">
+            <div className="col-2 col-md-1 p-0">
+              <div className="img-album my-1">
+                <img
+                  src={item.albumCover}
+                  className="rounded img-fluid"
+                  alt={item.title} />
+              </div>
+            </div>
+            <div className="col-9 col-md-10 pt-3">
+              <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{item.title}</span>
+              <br />
+              <span className="text-muted">{item.artistName}</span>
+            </div>
+            <hr className="style1 w-100" />
+          </div>
+        );
+      });
       playlistDetails = (
         <>
           <div className="container">
@@ -193,27 +247,11 @@ export default class SavedResult extends React.Component {
             </div> */}
           </div>
           {tracks &&
-            <div key={tracks.id} data-id={tracks.id} className="row margin-neg">
-              <div className="col-2 col-md-1 p-0">
-                <div className="img-album my-1">
-                  <img
-                    src={tracks.albumCover}
-                    className="rounded img-fluid"
-                    alt={tracks.title} />
-                </div>
-              </div>
-              <div className="col-9 col-md-10 pt-3">
-                <span className="d-inline-block text-truncate" style={{ maxWidth: 250 }}>{tracks.title}</span>
-                <br />
-                <span className="text-muted">{tracks.artistName}</span>
-              </div>
-              <hr className="style1 w-100" />
-            </div>
+            <div className="container">{savedList}</div>
           }
         </>
       );
     }
-
     return (
       <>
         {result && endpoint === 'songs' &&
@@ -290,7 +328,9 @@ export default class SavedResult extends React.Component {
               <div className="header">
                 <h4>Select Playlist</h4>
               </div>
-
+              <div className="container" onClick={addSongToPlaylist}>
+                <div>{savedList}</div>
+              </div>
             </div>
           </div>
         }
