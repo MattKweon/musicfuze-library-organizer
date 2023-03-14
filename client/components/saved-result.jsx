@@ -23,6 +23,7 @@ export default class SavedResult extends React.Component {
     this.addSongToPlaylist = this.addSongToPlaylist.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleCancelDelete = this.handleCancelDelete.bind(this);
+    this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
   }
 
   componentDidMount() {
@@ -133,17 +134,39 @@ export default class SavedResult extends React.Component {
     this.componentDidMount();
   }
 
-  handleDelete() {
-    this.setState({ deleteModal: true });
+  handleDelete(e) {
+    const deleteId = e.target.closest('[data-id]').getAttribute('data-id');
+    this.setState({ deleteFromLibrary: deleteId });
   }
 
   handleCancelDelete() {
-    this.setState({ deleteModal: false });
+    this.setState({ deleteFromLibrary: null });
+  }
+
+  handleConfirmDelete(e) {
+    e.preventDefault();
+    const deleteId = this.state.deleteFromLibrary;
+    const trackId = this.state.result[deleteId].id;
+    const token = window.localStorage.getItem('user-jwt');
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': token
+      },
+      body: JSON.stringify({ trackId })
+    };
+    fetch('/api/delete/library', options)
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ result, deleteFromLibrary: null });
+      })
+      .catch(err => console.error(err));
   }
 
   render() {
-    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleSongOptions, addSongToPlaylist, handleDelete, handleCancelDelete } = this;
-    const { result, createPlaylist, showPlaylistDetails, choosePlaylist, deleteModal } = this.state;
+    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleSongOptions, addSongToPlaylist, handleDelete, handleCancelDelete, handleConfirmDelete } = this;
+    const { result, createPlaylist, showPlaylistDetails, choosePlaylist, deleteFromLibrary } = this.state;
     const endpoint = this.props.libCategory.get('libCategory');
     let savedList;
     let playlistDetails;
@@ -345,7 +368,7 @@ export default class SavedResult extends React.Component {
             </div>
           </div>
         }
-        {deleteModal &&
+        {deleteFromLibrary &&
           <div className="modal-background fixed-top vh-100">
             <div className="modal-container p-3">
               <div className="header">
@@ -361,7 +384,8 @@ export default class SavedResult extends React.Component {
               <Button
                 name="save"
                 type="submit"
-                className="btn-main" >
+                className="btn-main"
+                onClick={handleConfirmDelete} >
                 Confirm
               </Button>
             </div>

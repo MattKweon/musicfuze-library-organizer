@@ -273,7 +273,24 @@ app.delete('/api/delete/library', (req, res, next) => {
   const params = [trackId];
   db.query(sql, params)
     .then(result => {
-      res.status(201).json('sucessfully delete');
+      const sql = `
+        select "l"."trackId" as "id",
+              "t"."title",
+              "art"."name" as "artistName",
+              "alb"."coverUrl" as "albumCover"
+          from "library" as "l"
+          join "tracks" as "t" using ("trackId")
+          join "artists" as "art" using ("artistId")
+          join "albums" as "alb" using ("albumId")
+          where "l"."userId" = '${userId}'
+          order by "t"."title"
+      `;
+      db.query(sql)
+        .then(result => {
+          const trackList = result.rows;
+          res.status(200).json(trackList);
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 });
