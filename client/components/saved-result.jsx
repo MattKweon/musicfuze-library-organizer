@@ -21,6 +21,9 @@ export default class SavedResult extends React.Component {
     this.handleSongOptions = this.handleSongOptions.bind(this);
     this.handleClickPlaylist = this.handleClickPlaylist.bind(this);
     this.addSongToPlaylist = this.addSongToPlaylist.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleCancelDelete = this.handleCancelDelete.bind(this);
+    this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
   }
 
   componentDidMount() {
@@ -131,9 +134,39 @@ export default class SavedResult extends React.Component {
     this.componentDidMount();
   }
 
+  handleDelete(e) {
+    const deleteId = e.target.closest('[data-id]').getAttribute('data-id');
+    this.setState({ deleteFromLibrary: deleteId });
+  }
+
+  handleCancelDelete() {
+    this.setState({ deleteFromLibrary: null });
+  }
+
+  handleConfirmDelete(e) {
+    e.preventDefault();
+    const deleteId = this.state.deleteFromLibrary;
+    const trackId = this.state.result[deleteId].id;
+    const token = window.localStorage.getItem('user-jwt');
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': token
+      },
+      body: JSON.stringify({ trackId })
+    };
+    fetch('/api/delete/library', options)
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ result, deleteFromLibrary: null });
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
-    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleSongOptions, addSongToPlaylist } = this;
-    const { result, createPlaylist, showPlaylistDetails, choosePlaylist } = this.state;
+    const { handleCreatePlaylist, handleChange, handleCancel, handleConfirm, handleClickPlaylist, handleSongOptions, addSongToPlaylist, handleDelete, handleCancelDelete, handleConfirmDelete } = this;
+    const { result, createPlaylist, showPlaylistDetails, choosePlaylist, deleteFromLibrary } = this.state;
     const endpoint = this.props.libCategory.get('libCategory');
     let savedList;
     let playlistDetails;
@@ -165,6 +198,7 @@ export default class SavedResult extends React.Component {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={handleSongOptions}>Add to Playlist</Dropdown.Item>
+                  <Dropdown.Item onClick={handleDelete} className="text-danger">Remove...</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               <hr className="style1 w-100" />
@@ -173,6 +207,7 @@ export default class SavedResult extends React.Component {
         } else if (endpoint === 'playlists' || choosePlaylist === true) {
           return (
             <div
+              role="button"
               key={item.playlistId}
               data-id={item.playlistId}
               className="row align-items-center clickable-row" >
@@ -259,7 +294,7 @@ export default class SavedResult extends React.Component {
         }
         {endpoint === 'playlists' && showPlaylistDetails === null
           ? <>
-            <div className="container" onClick={handleCreatePlaylist}>
+            <div role="button" className="container" onClick={handleCreatePlaylist}>
               <div className="row align-items-center clickable-row">
                 <div className="col-4 ps-0">
                   <div className="add-playlist-container d-flex">
@@ -330,6 +365,33 @@ export default class SavedResult extends React.Component {
               </div>
               <div className="container" onClick={addSongToPlaylist}>
                 <div>{savedList}</div>
+              </div>
+            </div>
+          </div>
+        }
+        {deleteFromLibrary &&
+          <div className="modal-background fixed-top vh-100">
+            <div className="modal-container-delete p-3">
+              <div className="header text-center">
+                <h4>Remove from library</h4>
+              </div>
+              <div className="row">
+                <div className="col d-flex justify-content-between">
+                  <Button
+                    name="close"
+                    type="button"
+                    className="btn-secondary"
+                    onClick={handleCancelDelete} >
+                    Cancel
+                  </Button>
+                  <Button
+                    name="save"
+                    type="submit"
+                    className="btn-main"
+                    onClick={handleConfirmDelete} >
+                    Confirm
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
