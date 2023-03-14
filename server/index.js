@@ -109,45 +109,6 @@ app.get('/api/search/:endpoint', (req, res, next) => {
 
 app.use(authorizationMiddleware);
 
-app.post('/api/save/library', (req, res, next) => {
-  const { userId } = req.user;
-  const { id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover } = req.body;
-  const sql = `
-    with "insertTrack" as (
-      insert into "tracks" ("trackId", "title", "artistId", "albumId")
-    values ($1, $2, $3, $6)
-    on conflict ("trackId")
-    do nothing
-    ), "insertArtist" as (
-      insert into "artists" ("artistId", "name", "pictureUrl")
-    values ($3, $4, $5)
-    on conflict ("artistId")
-    do nothing
-    )
-    insert into "albums" ("albumId", "title", "coverUrl")
-    values ($6, $7, $8)
-    on conflict ("albumId")
-    do nothing;
-  `;
-  const params = [id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover];
-  db.query(sql, params)
-    .then(result => {
-      const sql = `
-        insert into "library" ("userId", "trackId")
-        values ($1, $2)
-        returning "trackId"
-      `;
-      const params = [userId, id];
-      db.query(sql, params)
-        .then(result => {
-          const [trackId] = result.rows;
-          res.status(201).json(trackId);
-        })
-        .catch(err => next(err));
-    })
-    .catch(err => next(err));
-});
-
 app.get('/api/user/library/songs', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
@@ -218,6 +179,45 @@ app.get('/api/user/library/playlists/:id', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/save/library', (req, res, next) => {
+  const { userId } = req.user;
+  const { id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover } = req.body;
+  const sql = `
+    with "insertTrack" as (
+      insert into "tracks" ("trackId", "title", "artistId", "albumId")
+    values ($1, $2, $3, $6)
+    on conflict ("trackId")
+    do nothing
+    ), "insertArtist" as (
+      insert into "artists" ("artistId", "name", "pictureUrl")
+    values ($3, $4, $5)
+    on conflict ("artistId")
+    do nothing
+    )
+    insert into "albums" ("albumId", "title", "coverUrl")
+    values ($6, $7, $8)
+    on conflict ("albumId")
+    do nothing;
+  `;
+  const params = [id, title, artistId, artistName, artistPicture, albumId, albumTitle, albumCover];
+  db.query(sql, params)
+    .then(result => {
+      const sql = `
+        insert into "library" ("userId", "trackId")
+        values ($1, $2)
+        returning "trackId"
+      `;
+      const params = [userId, id];
+      db.query(sql, params)
+        .then(result => {
+          const [trackId] = result.rows;
+          res.status(201).json(trackId);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/create/playlist', (req, res, next) => {
   const { userId } = req.user;
   const { playlistName } = req.body;
@@ -258,6 +258,22 @@ app.post('/api/save/library/playlist', (req, res, next) => {
     .then(result => {
       const [trackId] = result.rows;
       res.status(201).json(trackId);
+    })
+    .catch(err => next(err));
+});
+
+app.delete('/api/delete/library', (req, res, next) => {
+  const { userId } = req.user;
+  const { trackId } = req.body;
+  const sql = `
+    delete from "library"
+     where "trackId" = $1
+       and "userId"  = '${userId}'
+  `;
+  const params = [trackId];
+  db.query(sql, params)
+    .then(result => {
+      res.status(201).json('sucessfully delete');
     })
     .catch(err => next(err));
 });
