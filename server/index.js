@@ -157,6 +157,7 @@ app.get('/api/user/library/playlists/:id', (req, res, next) => {
   `;
   db.query(sql)
     .then(result => {
+      result.rows[0].id = id;
       const playlistDetails = result.rows;
       const sql = `
         select "pt"."trackId" as "id",
@@ -307,24 +308,25 @@ app.delete('/api/delete/playlist/track', (req, res, next) => {
     .then(result => {
       const sql = `
       select "p"."name" as "playlistName",
-            "a"."username"
+             "a"."username"
         from "playlist" as "p"
         join "accounts" as "a" using ("userId")
-        where "p"."playlistId" = '${playlistId}'
+       where "p"."playlistId" = '${playlistId}'
       `;
       db.query(sql)
         .then(result => {
+          result.rows[0].id = playlistId;
           const playlistDetails = result.rows;
           const sql = `
             select "pt"."trackId" as "id",
-                  "t"."title",
-                  "art"."name" as "artistName",
-                  "alb"."coverUrl" as "albumCover"
+                   "t"."title",
+                   "art"."name" as "artistName",
+                   "alb"."coverUrl" as "albumCover"
               from "playlistTracks" as "pt"
               join "tracks" as "t" using ("trackId")
               join "artists" as "art" using ("artistId")
               join "albums" as "alb" using ("albumId")
-            where "playlistId" = '${playlistId}'
+             where "playlistId" = '${playlistId}'
           `;
           db.query(sql)
             .then(result => {
