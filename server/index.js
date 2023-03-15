@@ -305,7 +305,35 @@ app.delete('/api/delete/playlist/track', (req, res, next) => {
   const params = [trackId, playlistId];
   db.query(sql, params)
     .then(result => {
-      res.status(200).json('successfully removed');
+      const sql = `
+      select "p"."name" as "playlistName",
+            "a"."username"
+        from "playlist" as "p"
+        join "accounts" as "a" using ("userId")
+        where "p"."playlistId" = '${playlistId}'
+      `;
+      db.query(sql)
+        .then(result => {
+          const playlistDetails = result.rows;
+          const sql = `
+            select "pt"."trackId" as "id",
+                  "t"."title",
+                  "art"."name" as "artistName",
+                  "alb"."coverUrl" as "albumCover"
+              from "playlistTracks" as "pt"
+              join "tracks" as "t" using ("trackId")
+              join "artists" as "art" using ("artistId")
+              join "albums" as "alb" using ("albumId")
+            where "playlistId" = '${playlistId}'
+          `;
+          db.query(sql)
+            .then(result => {
+              const playlistTracks = result.rows;
+              res.status(200).json([playlistDetails, playlistTracks]);
+            })
+            .catch(err => next(err));
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 });
