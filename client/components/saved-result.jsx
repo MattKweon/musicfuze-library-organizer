@@ -126,7 +126,7 @@ export default class SavedResult extends React.Component {
       },
       body: JSON.stringify({ playlistId, trackId })
     };
-    fetch('/api/save/library/playlist', options)
+    fetch('/api/save/playlist/track', options)
       .then(res => res.json())
       .then(result => {
         this.setState({ choosePlaylist: false });
@@ -208,7 +208,7 @@ export default class SavedResult extends React.Component {
           return (
             <div
               role="button"
-              key={item.playlistId}
+              key={item.index}
               data-id={item.playlistId}
               className="row align-items-center clickable-row" >
               <div className="col-4 ps-0">

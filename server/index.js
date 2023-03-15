@@ -246,7 +246,7 @@ app.post('/api/create/playlist', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/save/library/playlist', (req, res, next) => {
+app.post('/api/save/playlist/track', (req, res, next) => {
   const { playlistId, trackId } = req.body;
   const sql = `
     insert into "playlistTracks" ("playlistId", "trackId")
@@ -291,6 +291,21 @@ app.delete('/api/delete/library', (req, res, next) => {
           res.status(200).json(trackList);
         })
         .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.delete('/api/delete/playlist/track', (req, res, next) => {
+  const { trackId, playlistId } = req.body;
+  const sql = `
+    delete from "playlistTracks"
+     where "trackId" = $1
+       and "playlistId" = $2
+  `;
+  const params = [trackId, playlistId];
+  db.query(sql, params)
+    .then(result => {
+      res.status(200).json('successfully removed');
     })
     .catch(err => next(err));
 });
