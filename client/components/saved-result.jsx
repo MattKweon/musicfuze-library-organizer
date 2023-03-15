@@ -249,6 +249,16 @@ export default class SavedResult extends React.Component {
               <br />
               <span className="text-muted">{item.artistName}</span>
             </div>
+            <Dropdown className="col-1">
+              <Dropdown.Toggle
+                className="material-symbols-outlined dropdown-btn pt-4 ps-3"
+                id="dropdown-basic" >
+                more_horiz
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item className="text-danger">Remove...</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
             <hr className="style1 w-100" />
           </div>
         );
