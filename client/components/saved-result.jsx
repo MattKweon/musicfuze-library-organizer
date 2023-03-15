@@ -126,7 +126,7 @@ export default class SavedResult extends React.Component {
       },
       body: JSON.stringify({ playlistId, trackId })
     };
-    fetch('/api/save/library/playlist', options)
+    fetch('/api/save/playlist/track', options)
       .then(res => res.json())
       .then(result => {
         this.setState({ choosePlaylist: false });
@@ -145,23 +145,47 @@ export default class SavedResult extends React.Component {
 
   handleConfirmDelete(e) {
     e.preventDefault();
+    const endpoint = this.props.libCategory.get('libCategory');
     const deleteId = this.state.deleteFromLibrary;
-    const trackId = this.state.result[deleteId].id;
     const token = window.localStorage.getItem('user-jwt');
-    const options = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Access-Token': token
-      },
-      body: JSON.stringify({ trackId })
-    };
-    fetch('/api/delete/library', options)
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ result, deleteFromLibrary: null });
-      })
-      .catch(err => console.error(err));
+    let trackId;
+    let options;
+    if (endpoint === 'songs') {
+      trackId = this.state.result[deleteId].id;
+      options = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': token
+        },
+        body: JSON.stringify({ trackId })
+      };
+      fetch('/api/delete/library', options)
+        .then(res => res.json())
+        .then(result => {
+          this.setState({ result, deleteFromLibrary: null });
+        })
+        .catch(err => console.error(err));
+    } else if (endpoint === 'playlists') {
+      const playlistId = this.state.showPlaylistDetails[0][deleteId].id;
+      trackId = this.state.showPlaylistDetails[1][deleteId].id;
+      options = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': token
+        },
+        body: JSON.stringify({ trackId, playlistId })
+      };
+      fetch('/api/delete/playlist/track', options)
+        .then(res => res.json())
+        .then(result => {
+          this.setState({
+            deleteFromLibrary: null,
+            showPlaylistDetails: result
+          });
+        });
+    }
   }
 
   render() {
@@ -176,7 +200,7 @@ export default class SavedResult extends React.Component {
       savedList = result.map((item, index) => {
         if (endpoint === 'songs' && choosePlaylist !== true) {
           return (
-            <div key={item.id} data-id={index} className="row margin-neg">
+            <div key={index} data-id={index} className="row margin-neg">
               <div className="col-2 col-md-1 p-0">
                 <div className="img-album my-1">
                   <img
@@ -208,7 +232,7 @@ export default class SavedResult extends React.Component {
           return (
             <div
               role="button"
-              key={item.playlistId}
+              key={index}
               data-id={item.playlistId}
               className="row align-items-center clickable-row" >
               <div className="col-4 ps-0">
@@ -249,6 +273,16 @@ export default class SavedResult extends React.Component {
               <br />
               <span className="text-muted">{item.artistName}</span>
             </div>
+            <Dropdown className="col-1">
+              <Dropdown.Toggle
+                className="material-symbols-outlined dropdown-btn pt-4 ps-3"
+                id="dropdown-basic" >
+                more_horiz
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={handleDelete} className="text-danger">Remove...</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
             <hr className="style1 w-100" />
           </div>
         );

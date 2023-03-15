@@ -157,6 +157,7 @@ app.get('/api/user/library/playlists/:id', (req, res, next) => {
   `;
   db.query(sql)
     .then(result => {
+      result.rows[0].id = id;
       const playlistDetails = result.rows;
       const sql = `
         select "pt"."trackId" as "id",
@@ -246,7 +247,7 @@ app.post('/api/create/playlist', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/save/library/playlist', (req, res, next) => {
+app.post('/api/save/playlist/track', (req, res, next) => {
   const { playlistId, trackId } = req.body;
   const sql = `
     insert into "playlistTracks" ("playlistId", "trackId")
@@ -289,6 +290,50 @@ app.delete('/api/delete/library', (req, res, next) => {
         .then(result => {
           const trackList = result.rows;
           res.status(200).json(trackList);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.delete('/api/delete/playlist/track', (req, res, next) => {
+  const { trackId, playlistId } = req.body;
+  const sql = `
+    delete from "playlistTracks"
+     where "trackId" = $1
+       and "playlistId" = $2
+  `;
+  const params = [trackId, playlistId];
+  db.query(sql, params)
+    .then(result => {
+      const sql = `
+      select "p"."name" as "playlistName",
+             "a"."username"
+        from "playlist" as "p"
+        join "accounts" as "a" using ("userId")
+       where "p"."playlistId" = '${playlistId}'
+      `;
+      db.query(sql)
+        .then(result => {
+          result.rows[0].id = playlistId;
+          const playlistDetails = result.rows;
+          const sql = `
+            select "pt"."trackId" as "id",
+                   "t"."title",
+                   "art"."name" as "artistName",
+                   "alb"."coverUrl" as "albumCover"
+              from "playlistTracks" as "pt"
+              join "tracks" as "t" using ("trackId")
+              join "artists" as "art" using ("artistId")
+              join "albums" as "alb" using ("albumId")
+             where "playlistId" = '${playlistId}'
+          `;
+          db.query(sql)
+            .then(result => {
+              const playlistTracks = result.rows;
+              res.status(200).json([playlistDetails, playlistTracks]);
+            })
+            .catch(err => next(err));
         })
         .catch(err => next(err));
     })
