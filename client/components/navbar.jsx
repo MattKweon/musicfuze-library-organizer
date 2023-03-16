@@ -29,7 +29,6 @@ export default class Navbar extends React.Component {
               <>
                 <a href="#" className={`text-muted me-3 ${underlineHome}`}>Home</a>
                 <a href="#discover" className={`text-muted ${underlineDiscover}`}>Discover</a>
-                <button onClick={handleSignOut} className="btn btn-main">Sign Out</button>
               </>
             }
             { user === null &&
@@ -40,6 +39,9 @@ export default class Navbar extends React.Component {
             }
           </div>
         </div>
+        { user !== null &&
+          <button onClick={handleSignOut} className="btn btn-main position-absolute end-0 me-2">Sign Out</button>
+        }
       </nav>
     );
   }
