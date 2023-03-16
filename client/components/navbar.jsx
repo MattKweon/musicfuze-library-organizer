@@ -3,7 +3,7 @@ import AppContext from '../lib/app-context';
 
 export default class Navbar extends React.Component {
   render() {
-    const { user, route } = this.context;
+    const { user, route, handleSignOut } = this.context;
     const justifyContent = user
       ? 'justify-content-start'
       : '';
@@ -29,7 +29,7 @@ export default class Navbar extends React.Component {
               <>
                 <a href="#" className={`text-muted me-3 ${underlineHome}`}>Home</a>
                 <a href="#discover" className={`text-muted ${underlineDiscover}`}>Discover</a>
-                <a className="btn btn-main">Sign Out</a>
+                <button onClick={handleSignOut} className="btn btn-main">Sign Out</button>
               </>
             }
             { user === null &&
