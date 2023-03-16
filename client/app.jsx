@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
 import jwtDecode from 'jwt-decode';
 import AppContext from './lib/app-context';
 import parseRoute from './lib/parse-route';
@@ -19,6 +20,8 @@ export default class App extends React.Component {
 
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleSignOut = this.handleSignOut.bind(this);
+    this.handleCancelSignOut = this.handleCancelSignOut.bind(this);
+    this.handleConfirmSignOut = this.handleConfirmSignOut.bind(this);
   }
 
   componentDidMount() {
@@ -38,8 +41,19 @@ export default class App extends React.Component {
   }
 
   handleSignOut() {
+    this.setState({ signOutModal: true });
+  }
+
+  handleCancelSignOut() {
+    this.setState({ signOutModal: false });
+  }
+
+  handleConfirmSignOut() {
     window.localStorage.removeItem('user-jwt');
-    this.setState({ user: null });
+    this.setState({
+      user: null,
+      signOutModal: false
+    });
   }
 
   renderPage() {
@@ -59,8 +73,8 @@ export default class App extends React.Component {
     if (this.state.isAuthorizing) {
       return null;
     }
-    const { user, route } = this.state;
-    const { handleSignIn, handleSignOut } = this;
+    const { user, route, signOutModal } = this.state;
+    const { handleSignIn, handleSignOut, handleCancelSignOut, handleConfirmSignOut } = this;
     const contextValue = { user, route, handleSignIn, handleSignOut };
     return (
       <AppContext.Provider value={contextValue}>
@@ -68,6 +82,33 @@ export default class App extends React.Component {
           <Navbar />
           <PageContainer>
             { this.renderPage() }
+            {signOutModal &&
+              <div className="modal-background fixed-top vh-100">
+                <div className="modal-container-delete p-3">
+                  <div className="header text-center">
+                    <h4>Log out from MusicFuze?</h4>
+                  </div>
+                  <div className="row">
+                    <div className="col d-flex justify-content-between">
+                      <Button
+                        name="close"
+                        type="button"
+                        className="btn-secondary"
+                        onClick={handleCancelSignOut} >
+                        Cancel
+                      </Button>
+                      <Button
+                        name="save"
+                        type="submit"
+                        className="btn-main"
+                        onClick={handleConfirmSignOut} >
+                        Confirm
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
           </PageContainer>
         </>
       </AppContext.Provider>
