@@ -41,6 +41,8 @@ Try the application live at [https://final-project.mkweon.com/](https://final-pr
 - User can log out
 
 ### Preview
+![Log in and save song](server/public/preview-gifs/log-in-and-save.gif)
+![Create playlist and add song](server/public/preview-gifs/create-and-add.gif)
 
 ## Strech Features:
 - User can view general, preset categories of their saved songs (albums, artists, genres)
