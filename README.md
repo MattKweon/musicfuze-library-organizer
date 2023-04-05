@@ -12,12 +12,16 @@ app that allows me to easily arrange my songs based on groups such as genere, mo
 
 - HTML5
 - CSS3
+- JavaScript
 - React.js
 - Webpack
 - Node.js
+- Express.js
 - PostgreSQL
-- Express
-- React Bootstrap
+- Babel
+- Dokku
+- Amazon EC2
+- [React Bootstrap](https://react-bootstrap.github.io/)
 - [deezer API](https://developers.deezer.com/guidelines)
 
 ## Live Demo
@@ -46,6 +50,56 @@ Try the application live at [https://final-project.mkweon.com/](https://final-pr
 ## Development
 
 ### System Requirements:
-- Node.js 18.7 or higher
-- Npm
-(figure out how to check the minimum system requirements for my app, does it have to the version i currently have or higher; or can it be an older version than what i currently have)
+- Node.js 10 or higher
+- NPM 6 or higher
+- PostgreSQL 1.62 or higher
+
+### Getting Started
+
+1. Clone the repository.
+```
+git clone git@github.com:MattKweon/final-project.git
+```
+
+2. Install all dependencies with NPM.
+```
+npm install
+```
+
+3. Create a copy of the `.env.example` file.
+```
+cp .env.example .env
+```
+
+4. In the `.env` file, replace TOKEN_SECRET `changeMe` with a random string value.
+
+   TOKEN_SECRET=**_changeMe_**
+
+5. Start the database server.
+```
+sudo service postgresql start
+```
+
+6. Create a new database.
+```
+createdb 'name of database'
+```
+
+7. In the `.env` file, update the DATABASE_URL `changeMe`.
+
+   DATABASE_URL=postgres://dev:dev@localhost/**_changeMe_**?sslmode=disable
+
+8. Import the `schema.sql` and `data.sql` files to the database.
+```
+npm run db:import
+```
+
+9. Start the project. Project can be viewed at [http://localhost:3000](http://localhost:3000) on your browser.
+```
+npm run dev
+```
+
+10. Start pgweb to view your database. Database can be viewed by opening [http://localhost:8081](http://localhost:8081) on your browser.
+```
+pgweb --db='name of database'
+```
