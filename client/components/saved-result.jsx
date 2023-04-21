@@ -309,11 +309,6 @@ export default class SavedResult extends React.Component {
                 </div>
               </div>
             </div>
-            {/* <div className="row mb-3">
-              <div className="col d-flex justify-content-center">
-                <Button type="button" className="btn-alt">Add Music</Button>
-              </div>
-            </div> */}
           </div>
           {tracks &&
             <div className="container">{savedList}</div>

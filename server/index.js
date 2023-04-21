@@ -345,6 +345,3 @@ app.use(errorMiddleware);
 app.listen(process.env.PORT, () => {
   process.stdout.write(`\n\napp listening on port ${process.env.PORT}\n\n`);
 });
-
-// user-token:
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzZXJuYW1lIjoibGZ6ZGVtbyIsImlhdCI6MTY2OTkzODg0OH0.Ed2CMghDjcHeciPsXTn9v1Cunz0XmqXMgYY0pGysnOg
