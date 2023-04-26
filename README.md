@@ -26,7 +26,7 @@ app that allows me to easily arrange my songs based on groups such as genere, mo
 
 ## Live Demo
 
-Try the application live at [https://final-project.mkweon.com/](https://final-project.mkweon.com/)
+Try the application live at [https://musicfuze.mkweon.com/](https://musicfuze.mkweon.com/)
 
 ## Features:
 - User can create an account
